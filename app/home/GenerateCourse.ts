@@ -10,5 +10,5 @@ export async function GenerateCourse(topic: string, language: string) {
     generated.questions.slice(5).map((q) => q.question)
   );
 
-  return analized.text;
+  return generated;
 }

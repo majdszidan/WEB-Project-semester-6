@@ -1,11 +1,10 @@
 import { GenerateCourse } from "./GenerateCourse";
 
 export default async function HomePage() {
-  const course = await GenerateCourse("C# advanced", "arabic");
+  const course = await GenerateCourse("nextjs", "arabic");
   return (
     <>
-      {course}
-      {/* <h1>{course.quizName}</h1>
+      <h1>{course.quizName}</h1>
       {course.questions.map((question) => (
         <div key={question.question}>
           <h2>{question.question}</h2>
@@ -15,7 +14,7 @@ export default async function HomePage() {
             ))}
           </ul>
         </div>
-      ))} */}
+      ))}
     </>
   );
 }
