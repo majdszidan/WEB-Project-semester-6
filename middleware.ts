@@ -6,8 +6,6 @@ export async function middleware(request: NextRequest) {
     request.cookies.get("token")?.value?.toString() ?? ""
   );
 
-  console.log(verified);
-
   if (!verified && request.nextUrl.pathname !== "/") {
     return NextResponse.redirect(new URL("/", request.url));
   }
