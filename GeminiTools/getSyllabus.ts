@@ -85,7 +85,7 @@ export async function addToSyllabus({
   });
 }
 
-type Syllabus = {
+export type Syllabus = {
   title: string;
   description: string;
 };
