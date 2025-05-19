@@ -38,43 +38,53 @@ export default function LoginModal({
 
   return (
     <dialog
-      className="w-screen h-screen bg-transparent fixed top-0 left-0 z-50"
+      className="login-modal w-screen h-screen bg-transparent fixed top-0 left-0 z-50"
       open={isOpen}
     >
-      <div className=" bg-gray-500 opacity-75 transition-opacity w-full h-screen"></div>
+      {/* Modal Backdrop */}
+      <div className="login-backdrop bg-gray-500 opacity-75 transition-opacity w-full h-screen"></div>
+      
+      {/* Modal Container */}
       <div
-        className="fixed inset-0 z-50 w-screen h-screen  flex items-center justify-center"
+        className="login-container fixed inset-0 z-50 w-screen h-screen flex items-center justify-center"
         onClick={(e) => {
           if ((e.target as HTMLElement).id === "login-clickable-area")
             setIsOpen(false);
         }}
         id="login-clickable-area"
       >
-        <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full">
-          <div className="bg-white px-4 pt-5 pb-4 sm:p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium text-gray-900">
+        {/* Modal Content */}
+        <div className="login-content bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full">
+          <div className="login-body bg-white px-4 pt-5 pb-4 sm:p-6">
+            {/* Header with Title and Close Button */}
+            <div className="login-header flex justify-between items-center mb-4">
+              <h3 className="login-title text-lg font-medium text-gray-900">
                 Log in to your account
               </h3>
               <button
                 type="button"
-                className="close-modal text-gray-400 hover:text-gray-500"
+                className="login-close-button text-gray-400 hover:text-gray-500"
                 onClick={() => setIsOpen(false)}
               >
-                <XIcon />
+                <XIcon className="login-close-icon" />
               </button>
             </div>
+            
+            {/* Error Message */}
             {error && (
-              <div className="text-red-600 w-full bg-red-300 p-2 rounded-md my-2">
-                <InfoIcon className="inline mr-2" />
-                <p className="inline">{error}</p>
+              <div className="login-error text-red-600 w-full bg-red-300 p-2 rounded-md my-2">
+                <InfoIcon className="login-error-icon inline mr-2" />
+                <p className="login-error-text inline">{error}</p>
               </div>
             )}
-            <form className="space-y-6" onSubmit={login}>
-              <div>
+            
+            {/* Login Form */}
+            <form className="login-form space-y-6" onSubmit={login}>
+              {/* Email Field */}
+              <div className="login-email-field">
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
+                  className="login-email-label block text-sm font-medium text-gray-700"
                 >
                   Email address
                 </label>
@@ -82,14 +92,15 @@ export default function LoginModal({
                   type="email"
                   name="email"
                   id="email"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="login-email-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
 
-              <div>
+              {/* Password Field */}
+              <div className="login-password-field">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
+                  className="login-password-label block text-sm font-medium text-gray-700"
                 >
                   Password
                 </label>
@@ -97,25 +108,27 @@ export default function LoginModal({
                   type="password"
                   name="password"
                   id="password"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="login-password-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
 
-              <div className="flex items-center justify-between">
-                <div>
+              {/* Forgot Password */}
+              <div className="login-options flex items-center justify-between">
+                <div className="login-forgot-password">
                   <a
                     href="#"
-                    className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                    className="login-forgot-link text-sm font-medium text-indigo-600 hover:text-indigo-500"
                   >
                     Forgot password?
                   </a>
                 </div>
               </div>
 
-              <div>
+              {/* Submit Button */}
+              <div className="login-submit">
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="login-submit-button w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   Sign in
                 </button>

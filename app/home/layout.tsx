@@ -1,4 +1,4 @@
-import NavBar from "./navbar";
+import NavBar from "../navbar";
 
 export default function HomeLayout({
   children,
@@ -6,11 +6,9 @@ export default function HomeLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="h-screen  w-screen">
+    <div className="h-screen  w-screen bg-[#275287]">
       <NavBar />
-      <div className="w-full flex justify-center">
-        <main className="max-w-6xl w-full">{children}</main>
+        <main className="">{children}</main>
       </div>
-    </div>
   );
 }

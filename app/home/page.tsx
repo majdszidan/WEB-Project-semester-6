@@ -1,20 +1,23 @@
 import { GenerateCourse } from "./GenerateCourse";
+import CoursesGrid from "./CoursesGrid";
+import HomeLayout from "./layout";
+import AddCourseButton from "./AddCourseButton";
+import RequireAuth from "../RequireAuth";
 
-export default async function HomePage() {
-  const course = await GenerateCourse("nextjs", "arabic");
+export default function HomePage() {
   return (
-    <>
-      <h1>{course.quizName}</h1>
-      {course.questions.map((question) => (
-        <div key={question.question}>
-          <h2>{question.question}</h2>
-          <ul>
-            {question.choices.map((choice) => (
-              <li key={choice}>{choice}</li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </>
+    <RequireAuth>
+     <HomeLayout>
+    <div className="pt-20 px-6  space-y-8 space-x-100">
+    <section>
+      <h2 className="text-2xl font-semibold text-white mb-6">Choose a Course</h2>
+      <CoursesGrid />
+    </section>
+    <AddCourseButton />
+    
+  </div>
+  
+  </HomeLayout>
+    </RequireAuth>
   );
 }
