@@ -15,6 +15,7 @@ export default function LoginModal({
 }) {
   const [error, setError] = useState<string>("");
   const router = useRouter();
+
   const login = (form: FormEvent<HTMLFormElement>) => {
     form.preventDefault();
     setError("");
@@ -31,7 +32,7 @@ export default function LoginModal({
       password?.toString() ?? ""
     )
       .then(() => {
-        router.replace("/home");
+        setTimeout(() => router.replace("/home"), 500);
       })
       .catch((e) => setError(e.message));
   };
@@ -43,7 +44,7 @@ export default function LoginModal({
     >
       {/* Modal Backdrop */}
       <div className="login-backdrop bg-gray-500 opacity-75 transition-opacity w-full h-screen"></div>
-      
+
       {/* Modal Container */}
       <div
         className="login-container fixed inset-0 z-50 w-screen h-screen flex items-center justify-center"
@@ -69,7 +70,7 @@ export default function LoginModal({
                 <XIcon className="login-close-icon" />
               </button>
             </div>
-            
+
             {/* Error Message */}
             {error && (
               <div className="login-error text-red-600 w-full bg-red-300 p-2 rounded-md my-2">
@@ -77,7 +78,7 @@ export default function LoginModal({
                 <p className="login-error-text inline">{error}</p>
               </div>
             )}
-            
+
             {/* Login Form */}
             <form className="login-form space-y-6" onSubmit={login}>
               {/* Email Field */}

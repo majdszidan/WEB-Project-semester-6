@@ -51,11 +51,11 @@ export default function NavBar() {
   }, []);
 
   // Handle logout
-   const handleLogout = async () => {
+  const handleLogout = async () => {
     try {
       await signOut(auth);
       setCurrentUser(null);
-      router.push("/"); // Redirect to index page
+      router.replace("/"); // Redirect to index page
     } catch (error) {
       console.error("Logout error", error);
     }
@@ -117,7 +117,8 @@ export default function NavBar() {
                   <div className="flex items-center space-x-2">
                     <User className="w-5 h-5 text-indigo-600" />
                     <span className="text-sm font-bold font-large text-black">
-                      {currentUser.displayName || currentUser.email?.split('@')[0]}
+                      {currentUser.displayName ||
+                        currentUser.email?.split("@")[0]}
                     </span>
                   </div>
                   <button
@@ -155,8 +156,8 @@ export default function NavBar() {
           </div>
         </div>
       </nav>
-    <LoginModal isOpen={loginIsOpen} setIsOpen={setLoginIsOpen} />
-    <SignUpModal isOpen={registerIsOpen} setIsOpen={setRegisterIsOpen} />
+      <LoginModal isOpen={loginIsOpen} setIsOpen={setLoginIsOpen} />
+      <SignUpModal isOpen={registerIsOpen} setIsOpen={setRegisterIsOpen} />
     </>
   );
 }
