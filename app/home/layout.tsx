@@ -1,4 +1,4 @@
-import NavBar from "../navbar";
+import NavBar from "./navbar";
 
 export default function HomeLayout({
   children,
@@ -8,7 +8,7 @@ export default function HomeLayout({
   return (
     <div className="h-screen  w-screen bg-[#275287]">
       <NavBar />
-        <main className="">{children}</main>
-      </div>
+      <main className="">{children}</main>
+    </div>
   );
 }

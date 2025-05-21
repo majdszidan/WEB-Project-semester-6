@@ -1,4 +1,4 @@
-import NavBar from "../navbar";
+import NavBar from "./navbar";
 import HeroSection from "./hero";
 import FeaturesSection from "./features";
 import CoursesCatagories from "./courses";
