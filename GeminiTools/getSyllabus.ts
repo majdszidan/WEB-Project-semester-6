@@ -83,6 +83,8 @@ export async function addToSyllabus({
       },
     },
   });
+
+  return response.text ? (JSON.parse(response.text) as Syllabus[]) : [];
 }
 
 export type Syllabus = {
