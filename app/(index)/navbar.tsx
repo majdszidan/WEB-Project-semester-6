@@ -5,30 +5,13 @@ import LoginModal from "./login";
 import SignUpModal from "./signup";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
+import { useLanguages } from "../useLanguages";
 
 export default function NavBar() {
   const [loginIsOpen, setLoginIsOpen] = useState(false);
   const [registerIsOpen, setRegisterIsOpen] = useState(false);
   const [languageIsOpen, setLanguageIsOpen] = useState(false);
-  const [Languages, setLanguages] = useState<{ code: string; name: string }[]>(
-    []
-  );
-
-  useEffect(() => {
-    // Fetch languages
-    fetch("https://libretranslate.com/languages", {
-      next: { revalidate: 3600 },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setLanguages(
-          data.map((lang: { code: string; name: string }) => ({
-            code: lang.code,
-            name: lang.name,
-          }))
-        );
-      });
-  }, []);
+  const languages = useLanguages();
 
   return (
     <>
@@ -63,7 +46,7 @@ export default function NavBar() {
                   id="language-dropdown"
                   className="absolute right-0 mt-2 w-48 rounded-md shadow-lg max-h-80 overflow-y-auto bg-white ring-1 ring-black ring-opacity-5"
                 >
-                  {Languages.map((language) => {
+                  {languages.map((language) => {
                     return (
                       <Link
                         key={language.code}
