@@ -8,7 +8,9 @@ export default function HomeLayout({
   return (
     <div className="h-screen  w-screen bg-[#275287]">
       <NavBar />
-      <main className="">{children}</main>
+      <div className="w-full flex justify-center">
+        <main className="max-w-6xl w-full">{children}</main>
+      </div>
     </div>
   );
 }
