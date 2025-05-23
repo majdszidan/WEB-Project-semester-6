@@ -1,13 +1,5 @@
+import { Course } from "@/FirebaseTools/CreateCourse";
 import React from "react";
-
-interface CourseCardProps {
-  name: string;
-  icon?: string;
-  progress: number;
-  genre: string;
-  lastAccessed?: string;
-  description?: string;
-}
 
 export default function CourseCard({
   name,
@@ -16,7 +8,7 @@ export default function CourseCard({
   genre,
   lastAccessed,
   description,
-}: CourseCardProps) {
+}: Course) {
   return (
     <div
       id="course-card-container"
@@ -49,7 +41,7 @@ export default function CourseCard({
             <p className="text-sm text-gray-500">{genre}</p>
             {lastAccessed && (
               <p id="last-accessed" className="text-xs text-gray-400">
-                Last accessed: {lastAccessed}
+                Last accessed: {lastAccessed.toDateString()}
               </p>
             )}
           </div>

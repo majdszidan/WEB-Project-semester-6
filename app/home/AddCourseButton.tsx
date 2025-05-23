@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 import { PlusCircle, X } from "lucide-react";
-import { auth, firestore } from "@/firebase";
+import { auth } from "@/firebase";
 import { getSyllabus, Syllabus } from "@/GeminiTools/getSyllabus";
-import { useLanguages } from "../useLanguages"; //
-import { addDoc, collection } from "firebase/firestore";
+import { useLanguages } from "../useLanguages";
+import { CreateCourse } from "@/FirebaseTools/CreateCourse";
 
 export default function AddCourseButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -198,18 +198,17 @@ export default function AddCourseButton() {
                 </button>
                 <button
                   onClick={() => {
-                    addDoc(
-                      collection(
-                        firestore,
-                        "users/" + auth.currentUser?.uid + "/courses"
-                      ),
-                      {
-                        name: courseName,
-                        language: language,
-                        description: description,
-                        topics: Array.from(selectedTopics),
-                      }
-                    )
+                    CreateCourse({
+                      name: courseName,
+                      language: language,
+                      description: description,
+                      topics: selectedTopics,
+                      icon: "",
+                      progress: 0,
+                      genre: "",
+                      lastAccessed: new Date(),
+                      created: new Date(),
+                    })
                       .then(() => {
                         setShowSyllabusModal(false);
                         setIsOpen(false);

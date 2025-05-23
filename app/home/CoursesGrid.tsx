@@ -1,40 +1,38 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import CourseCard from "./CourseCard";
+import { GetCourses } from "@/FirebaseTools/GetCourses";
+import { Course } from "@/FirebaseTools/CreateCourse";
 
 export default function CoursesGrid() {
-  const courses = [
-    {
-      name: "Assembly 101",
-      icon: "/icons/nextjs.png",
-      progress: 40,
-      genre: "Programming",
-      lastAccessed: "2 days ago",
-      description: "Introduce of CPU language.",
-    },
-    {
-      name: "Modern Math",
-      icon: "/icons/math.png",
-      progress: 20,
-      genre: "Math",
-      lastAccessed: "5 days ago",
-      description: "Learn the advanced steps of Math.",
-    },
-    {
-      name: "Biology Essentials",
-      icon: "/icons/biology.png",
-      progress: 60,
-      genre: "Science",
-      lastAccessed: "1 day ago",
-      description:
-        "Understand the building blocks of life from cells to ecosystems.",
-    },
-  ];
+  const [courses, setCourses] = useState<Course[]>([]);
+
+  useEffect(() => {
+    const unsub = GetCourses(setCourses);
+    return unsub;
+  }, []);
 
   return (
-    <div id="courses-grid" className="flex flex-wrap justify-center gap-3 m-3">
-      {courses.map((course) => (
-        <CourseCard key={course.name} {...course} />
-      ))}
-    </div>
+    <>
+      {courses.length > 0 ? (
+        <>
+          <h2 className="text-2xl font-semibold text-white mb-6">
+            Choose a Course
+          </h2>
+          <div
+            id="courses-grid"
+            className="flex flex-wrap justify-center gap-3 m-3"
+          >
+            {courses.map((course) => (
+              <CourseCard key={course.id} {...course} />
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className="flex justify-center left-0 top-0 fixed w-screen items-center h-screen font-extrabold text-xl text ">
+          Click on the plus sign to create your first course :)
+        </div>
+      )}
+    </>
   );
 }
