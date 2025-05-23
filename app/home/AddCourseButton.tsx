@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { PlusCircle, X } from "lucide-react";
+import { PlusIcon, X } from "lucide-react";
 import { auth } from "@/firebase";
 import { getSyllabus, Syllabus } from "@/GeminiTools/getSyllabus";
 import { useLanguages } from "../useLanguages";
@@ -56,9 +56,9 @@ export default function AddCourseButton() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-transform transform hover:scale-105 z-50"
+          className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition-transform transform hover:scale-105 z-50"
         >
-          <PlusCircle className="w-6 h-6" />
+          <PlusIcon className="w-7 h-7" />
         </button>
       )}
 
