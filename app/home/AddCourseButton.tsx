@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PlusIcon, X } from "lucide-react";
 import { auth } from "@/firebase";
 import { getSyllabus, Syllabus } from "@/GeminiTools/getSyllabus";
@@ -20,6 +20,12 @@ export default function AddCourseButton() {
   );
   const [showSyllabusModal, setShowSyllabusModal] = useState(false);
   const languages = useLanguages();
+
+  useEffect(() => {
+    setCourseName("");
+    setDescription("");
+    setLanguage("");
+  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
