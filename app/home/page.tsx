@@ -5,7 +5,7 @@ import RequireAuth from "../RequireAuth";
 export default function HomePage() {
   return (
     <RequireAuth>
-      <div className="pt-20">
+      <div className="pt-20 px-5">
         <CoursesGrid />
         <AddCourseButton />
       </div>
