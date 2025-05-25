@@ -14,30 +14,52 @@ export async function getSyllabus({
     model: "models/gemini-2.0-flash",
     contents: [
       {
-        text: `You are a high school professor creating a syllabus for ${topic}. 
-        Give me a JSON array containing the core concepts taught in ${topic}, ordered from basic to advanced. 
-        Each object should have two keys: 'title' (string) and 'description' (string). 
-        The description should be a concise sentence summarizing the concept. 
-        Respond in ${language}.`,
+        text:
+          "You are an expert curriculum designer specializing in creating **high school level** syllabi.\n" +
+          'For the given topic "' +
+          topic +
+          '", produce a single, valid JSON object.\n' +
+          "Do not include any explanatory text, markdown formatting, or conversational elements outside of the JSON itself.\n" +
+          "The JSON object must have the following top-level keys:\n" +
+          '1. `course_summary`: (string) A single, concise sentence describing the overall content and learning journey of a **high school course** based on this syllabus for "' +
+          topic +
+          '".\n' +
+          '2. `topic_area`: (string) The general academic field or subject area to which "' +
+          topic +
+          '" belongs (e.g., "Mathematics", "Computer Science", "Literature", "Biology"). Infer this from the provided topic.\n' +
+          "3. `core_concepts`: (JSON array) An array of objects, where each object represents a core concept or unit **suitable for a high school curriculum**. This array MUST be ordered logically, progressing from **foundational/basic concepts to more advanced concepts appropriate for high school students**. Each object within this array MUST contain:\n" +
+          "* `title`: (string) The name/title of the concept.\n" +
+          "* `description`: (string) A concise, one-sentence summary of what this concept covers, **understandable by a high school student**.\n" +
+          "All textual string values within the generated JSON (i.e., `course_summary`, `topic_area` [if a translatable term], all `title`s, and all `description`s) MUST be in " +
+          language +
+          ".",
       },
     ],
     config: {
-      temperature: 0,
+      temperature: 0.3,
       responseMimeType: "application/json",
       responseSchema: {
-        type: Type.ARRAY,
-        items: {
-          type: Type.OBJECT,
-          required: ["title", "description"],
-          properties: {
-            title: { type: Type.STRING },
-            description: { type: Type.STRING },
+        type: Type.OBJECT,
+        required: ["course_summary", "topic_area", "core_concepts"],
+        properties: {
+          course_summary: { type: Type.STRING },
+          topic_area: { type: Type.STRING },
+          core_concepts: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              required: ["title", "description"],
+              properties: {
+                title: { type: Type.STRING },
+                description: { type: Type.STRING },
+              },
+            },
           },
         },
       },
     },
   });
-  return JSON.parse(response.text ?? "[]") as Syllabus[];
+  return JSON.parse(response.text ?? "[]") as CourseSyllabus;
 }
 
 export async function addToSyllabus({
@@ -86,6 +108,12 @@ export async function addToSyllabus({
 
   return response.text ? (JSON.parse(response.text) as Syllabus[]) : [];
 }
+
+export type CourseSyllabus = {
+  course_summary: string;
+  topic_area: string;
+  core_concepts: Syllabus[];
+};
 
 export type Syllabus = {
   title: string;

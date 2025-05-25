@@ -3,7 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { PlusIcon, X } from "lucide-react";
 import { auth } from "@/firebase";
-import { getSyllabus, Syllabus } from "@/GeminiTools/getSyllabus";
+import {
+  CourseSyllabus,
+  getSyllabus,
+  Syllabus,
+} from "@/GeminiTools/getSyllabus";
 import { useLanguages } from "../useLanguages";
 import { CreateCourse } from "@/FirebaseTools/CreateCourse";
 
@@ -14,7 +18,7 @@ export default function AddCourseButton() {
   const [description, setDescription] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [syllabus, setSyllabus] = useState<Syllabus[] | null>(null);
+  const [syllabus, setSyllabus] = useState<CourseSyllabus | null>(null);
   const [selectedTopics, setSelectedTopics] = useState<Set<Syllabus>>(
     new Set()
   );
@@ -46,7 +50,7 @@ export default function AddCourseButton() {
       });
       setSyllabus(aiSyllabus);
       // ✅ Pre-check all topics
-      const allTitles = new Set(aiSyllabus);
+      const allTitles = new Set(aiSyllabus.core_concepts);
       setSelectedTopics(allTitles);
       setShowSyllabusModal(true);
     } catch (err) {
@@ -171,7 +175,7 @@ export default function AddCourseButton() {
               </h3>
 
               <ul className="space-y-2 max-h-80 overflow-y-auto pr-2">
-                {syllabus.map((item, index) => (
+                {syllabus.core_concepts.map((item, index) => (
                   <li key={index} className="flex items-start space-x-2">
                     <input
                       type="checkbox"
@@ -209,11 +213,11 @@ export default function AddCourseButton() {
                     CreateCourse({
                       name: courseName,
                       language: language,
-                      description: description,
+                      description: syllabus.course_summary,
                       topics: selectedTopics,
                       icon: "",
                       progress: 0,
-                      genre: "",
+                      genre: syllabus.topic_area,
                       lastAccessed: new Date(),
                       created: new Date(),
                     })
