@@ -8,8 +8,8 @@ import {
   getSyllabus,
   Syllabus,
 } from "@/GeminiTools/getSyllabus";
-import { useLanguages } from "../useLanguages";
 import { CreateCourse } from "@/FirebaseTools/CreateCourse";
+import { LanguageList } from "../Languages";
 
 export default function AddCourseButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +23,6 @@ export default function AddCourseButton() {
     new Set()
   );
   const [showSyllabusModal, setShowSyllabusModal] = useState(false);
-  const languages = useLanguages();
 
   useEffect(() => {
     setCourseName("");
@@ -120,12 +119,11 @@ export default function AddCourseButton() {
                     onChange={(e) => setLanguage(e.target.value)}
                     className="mt-1 block w-full border border-gray-300 text-black rounded-md shadow-sm px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
                     required
-                    disabled={loading || languages.length === 0}
                   >
                     <option value="" disabled>
                       Select a language
                     </option>
-                    {languages.map((lang) => (
+                    {LanguageList.map((lang) => (
                       <option key={lang.code} value={lang.name}>
                         {lang.name}
                       </option>

@@ -1,19 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { auth } from "@/firebase";
 import { ChevronDown, User, LogOut } from "lucide-react";
 import Link from "next/link";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { useLanguages } from "../useLanguages";
+import { LanguageList } from "../Languages";
 
 export default function NavBar() {
   const router = useRouter(); // Initialize router
   const [languageIsOpen, setLanguageIsOpen] = useState(false);
-  const languages = useLanguages();
-  
-
 
   // Handle logout
   const handleLogout = async () => {
@@ -58,7 +55,7 @@ export default function NavBar() {
                   id="language-dropdown"
                   className="absolute right-0 mt-2 w-48 rounded-md shadow-lg max-h-80 overflow-y-auto bg-white ring-1 ring-black ring-opacity-5"
                 >
-                  {languages.map((language) => {
+                  {LanguageList.map((language) => {
                     return (
                       <Link
                         key={language.code}
