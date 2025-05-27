@@ -48,6 +48,7 @@ export default function AddCourseButton() {
         topic: description,
         language: language || "English",
       });
+
       setSyllabus(aiSyllabus);
       // ✅ Pre-check all topics
       const allTitles = new Set(aiSyllabus.core_concepts);
@@ -215,7 +216,7 @@ export default function AddCourseButton() {
                       language: language,
                       description: syllabus.course_summary,
                       topics: selectedTopics,
-                      icon: "",
+                      icon: syllabus.icon,
                       progress: 0,
                       genre: syllabus.topic_area,
                       lastAccessed: new Date(),

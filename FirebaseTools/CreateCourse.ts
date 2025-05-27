@@ -13,6 +13,7 @@ export async function CreateCourse(course: Course) {
       genre: course.genre,
       progress: course.progress,
       created: Timestamp.now(),
+      icon: course.icon,
       lastAccessed: Timestamp.fromDate(course.lastAccessed),
     }
   );
@@ -20,7 +21,7 @@ export async function CreateCourse(course: Course) {
 
 export type Course = {
   name: string;
-  icon: string;
+  icon?: string;
   language: string;
   progress: number;
   genre: string;

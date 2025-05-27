@@ -1,5 +1,6 @@
 import { Course } from "@/FirebaseTools/CreateCourse";
 import React from "react";
+import { DynamicIcon, iconNames } from "lucide-react/dynamic";
 
 export default function CourseCard({
   name,
@@ -21,12 +22,13 @@ export default function CourseCard({
 
       <div id="course-card-content" className="relative z-10 space-y-4">
         <div id="course-header" className="flex items-center gap-4">
-          {icon ? (
-            <img
+          {icon &&
+          iconNames.includes((icon.toLocaleLowerCase() ?? "") as "replace") ? (
+            <DynamicIcon
               id="course-icon"
-              src={icon}
-              alt={`${name} icon`}
-              className="w-12 h-12 rounded-lg"
+              name={icon.toLocaleLowerCase() as "replace"}
+              color="#155dfc"
+              className="bg-blue-100 w-12 h-12 p-2 rounded-lg"
             />
           ) : (
             <div
@@ -35,10 +37,14 @@ export default function CourseCard({
             />
           )}
           <div id="course-info">
-            <h2 className="text-xl font-bold text-gray-800 group-hover:text-blue-700 transition-colors">
-              {name}
-            </h2>
-            <p className="text-sm text-gray-500">{genre}</p>
+            <div className="flex items-center gap-2 ">
+              <h2 className="text-xl font-bold text-gray-800 group-hover:text-blue-700 transition-colors">
+                {name}
+              </h2>
+              <p className="text-xs inline text-white bg-blue-600 rounded-full px-1.5 py-1">
+                {genre}
+              </p>
+            </div>
             {lastAccessed && (
               <p id="last-accessed" className="text-xs text-gray-400">
                 Last accessed: {lastAccessed.toDateString()}

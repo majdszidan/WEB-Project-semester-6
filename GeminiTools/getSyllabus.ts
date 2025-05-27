@@ -26,13 +26,15 @@ export async function getSyllabus({
           '".\n' +
           '2. `topic_area`: (string) The general academic field or subject area to which "' +
           topic +
-          '" belongs (e.g., "Mathematics", "Computer Science", "Literature", "Biology"). Infer this from the provided topic.\n' +
+          '" belongs (e.g., "Mathematics", "Computer Science", "Literature", "Biology"). Infer this from the provided topic. **This value MUST always be in English.**\n' +
           "3. `core_concepts`: (JSON array) An array of objects, where each object represents a core concept or unit **suitable for a high school curriculum**. This array MUST be ordered logically, progressing from **foundational/basic concepts to more advanced concepts appropriate for high school students**. Each object within this array MUST contain:\n" +
           "* `title`: (string) The name/title of the concept.\n" +
           "* `description`: (string) A concise, one-sentence summary of what this concept covers, **understandable by a high school student**.\n" +
-          "All textual string values within the generated JSON (i.e., `course_summary`, `topic_area` [if a translatable term], all `title`s, and all `description`s) MUST be in " +
+          "The following textual string values within the generated JSON MUST be in " +
           language +
-          ".",
+          ": `course_summary`, all `title`s in `core_concepts`, and all `description`s in `core_concepts`.\n" +
+          "The `topic_area` MUST be in English, as specified above.\n" +
+          '4. `icon`: (string) The exact kebab-case name of an icon from **Lucide Icons** (see https://lucide.dev/) that is visually representative of the `topic`. Examples: "book-open", "brain-circuit", "code-2", "atom". This key MUST always be included. Provide only the icon name string. If a perfect match isn\'t available, choose the most relevant alternative from the Lucide Icons library.',
       },
     ],
     config: {
@@ -42,6 +44,7 @@ export async function getSyllabus({
         type: Type.OBJECT,
         required: ["course_summary", "topic_area", "core_concepts"],
         properties: {
+          icon: { type: Type.STRING },
           course_summary: { type: Type.STRING },
           topic_area: { type: Type.STRING },
           core_concepts: {
@@ -112,6 +115,7 @@ export async function addToSyllabus({
 export type CourseSyllabus = {
   course_summary: string;
   topic_area: string;
+  icon?: string;
   core_concepts: Syllabus[];
 };
 
