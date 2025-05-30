@@ -30,7 +30,8 @@ export default function CoursesGrid() {
         </>
       ) : (
         <div className="flex justify-center left-0 top-0 fixed w-screen items-center h-screen font-extrabold text-xl text ">
-          Click on the plus sign to create your first course :)
+          New User :) Please Add Your First Course 
+          <span className="text-blue-500"> (Click on the + icon)</span>
         </div>
       )}
     </>
