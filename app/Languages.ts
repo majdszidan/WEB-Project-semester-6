@@ -2,8 +2,7 @@ export const LanguageList = [
   { code: "ar", name: "Arabic" },
   { code: "bn", name: "Bengali" },
   { code: "bg", name: "Bulgarian" },
-  { code: "zh", name: "Chinese (Simplified)" },
-  { code: "zh", name: "Chinese (Traditional)" },
+  { code: "zh", name: "Chinese" },
   { code: "hr", name: "Croatian" },
   { code: "cs", name: "Czech" },
   { code: "da", name: "Danish" },
@@ -14,7 +13,7 @@ export const LanguageList = [
   { code: "fr", name: "French" },
   { code: "de", name: "German" },
   { code: "el", name: "Greek" },
-  { code: "iw", name: "Hebrew" },
+  { code: "he", name: "Hebrew" },
   { code: "hi", name: "Hindi" },
   { code: "hu", name: "Hungarian" },
   { code: "id", name: "Indonesian" },
@@ -39,3 +38,5 @@ export const LanguageList = [
   { code: "uk", name: "Ukrainian" },
   { code: "vi", name: "Vietnamese" },
 ];
+
+export const translatedPages = ["he", "ar", "en"];

@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Code2Icon,
   FlaskConicalIcon,
@@ -8,12 +6,9 @@ import {
   PaletteIcon,
   RadicalIcon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useTranslationContext } from "../TranslationProvider";
 
 export default function CoursesCatagories() {
-  const { translate } = useTranslationContext();
-  const [texts, setTexts] = useState({
+  const texts = {
     title: "Explore Course Categories",
     subtitle: "Find the perfect catch-up course for your needs",
     categories: [
@@ -54,28 +49,7 @@ export default function CoursesCatagories() {
         bg: "bg-pink-100",
       },
     ],
-  });
-
-  useEffect(() => {
-    async function translateContent() {
-      const translatedTitle = await translate("Explore Course Categories");
-      const translatedSubtitle = await translate("Find the perfect catch-up course for your needs");
-      const translatedCategories = await Promise.all(
-        texts.categories.map(async (category) => ({
-          ...category,
-          title: await translate(category.title),
-          description: await translate(category.description),
-        }))
-      );
-      setTexts({
-        title: translatedTitle,
-        subtitle: translatedSubtitle,
-        categories: translatedCategories,
-      });
-    }
-
-    translateContent();
-  }, [translate]);
+  };
 
   return (
     <section className="courses-section py-16 bg-gray-50">
@@ -91,13 +65,22 @@ export default function CoursesCatagories() {
 
         <div className="courses-grid mt-12 grid gap-5 max-w-lg mx-auto lg:grid-cols-3 lg:max-w-none">
           {texts.categories.map((category, idx) => (
-            <div key={idx} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
-              <div className={`${category.bg} px-4 py-5 sm:p-6`}>
+            <div
+              key={idx}
+              className={`flex flex-col rounded-lg shadow-lg overflow-hidden ${category.bg}`}
+            >
+              <div className="px-4 py-5 sm:p-6`">
                 <div className="flex items-center">
-                  <div className="flex-shrink-0 bg-white rounded-md p-3">{category.icon}</div>
+                  <div className="flex-shrink-0 bg-white rounded-md p-3">
+                    {category.icon}
+                  </div>
                   <div className="ml-5">
-                    <h3 className="text-lg font-medium text-gray-900">{category.title}</h3>
-                    <p className="mt-2 text-sm text-gray-500">{category.description}</p>
+                    <h3 className="text-lg font-medium text-gray-900">
+                      {category.title}
+                    </h3>
+                    <p className="mt-2 text-sm text-gray-500">
+                      {category.description}
+                    </p>
                   </div>
                 </div>
               </div>

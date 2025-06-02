@@ -6,7 +6,7 @@ import { ChevronDown, User, LogOut } from "lucide-react";
 import Link from "next/link";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { LanguageList } from "../Languages";
+import { LanguageList } from "@/app/Languages";
 
 export default function NavBar() {
   const router = useRouter(); // Initialize router

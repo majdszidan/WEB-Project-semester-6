@@ -9,7 +9,7 @@ import {
   Syllabus,
 } from "@/GeminiTools/getSyllabus";
 import { CreateCourse } from "@/FirebaseTools/CreateCourse";
-import { LanguageList } from "../Languages";
+import { LanguageList } from "@/app/Languages";
 
 export default function AddCourseButton() {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,6 +1,6 @@
 import CoursesGrid from "./CoursesGrid";
 import AddCourseButton from "./AddCourseButton";
-import RequireAuth from "../RequireAuth";
+import RequireAuth from "@/app/RequireAuth";
 
 export default function HomePage() {
   return (
