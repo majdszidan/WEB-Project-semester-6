@@ -1,3 +1,5 @@
+"use server";
+
 import { Type } from "@google/genai";
 import { genai } from "./genai";
 import { Syllabus } from "./getSyllabus";
@@ -163,7 +165,7 @@ export async function GenerateConveringQuestions({
     },
   });
 
-  return response.text;
+  return JSON.parse(response.text ?? "") as CoveringQuestions;
 }
 
 export type CoveringQuestions = {
