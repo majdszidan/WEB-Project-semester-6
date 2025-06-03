@@ -1,0 +1,16 @@
+import NavBar from "@/app/home/navbar";
+
+export default function HomeLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <div className="h-screen  w-screen bg-[#275287]">
+      <NavBar />
+      <div className="w-full flex justify-center">
+        <main className="max-w-6xl w-full">{children}</main>
+      </div>
+    </div>
+  );
+}
