@@ -1,6 +1,12 @@
 import { auth, firestore } from "@/firebase";
 import { CoveringQuestions } from "@/GeminiTools/generateCoveringQuestions";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
 
 export async function SaveQuestions(courseId: string, quiz: CoveringQuestions) {
   for (let i = 0; i < quiz.questions.length; i++) {
@@ -14,6 +20,8 @@ export async function SaveQuestions(courseId: string, quiz: CoveringQuestions) {
         correct_answer: quiz.questions[i].correct_answer,
         wrong_answers: quiz.questions[i].wrong_answers,
         topic_covered: quiz.questions[i].topic_covered,
+        index: i,
+        created: Timestamp.now(),
       }
     );
   }
