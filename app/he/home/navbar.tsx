@@ -59,7 +59,7 @@ export default function NavBar() {
                     setLanguageIsOpen(!languageIsOpen);
                   }}
                 >
-                  <span id="selected-language">English</span>
+                  <span id="selected-language">Hebrew</span>
                   <ChevronDown className="ms-1 text-xs"></ChevronDown>
                 </button>
                 <dialog
