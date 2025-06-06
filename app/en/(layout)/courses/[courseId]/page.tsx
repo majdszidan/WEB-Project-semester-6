@@ -44,6 +44,16 @@ export default function CoursePage() {
           });
           SaveQuestions(courseId, quiz);
         }
+        for (let index = 0; index < questions.length; index++) {
+          const element = questions[index];
+          element.wrong_answers = [
+            ...element.wrong_answers,
+            element.correct_answer,
+          ];
+          element.wrong_answers = element.wrong_answers.sort(
+            () => Math.random() - 0.5
+          );
+        }
         setQuestions(questions);
         setLoading(false);
       });
@@ -86,10 +96,7 @@ export default function CoursePage() {
             <div className="max-w-3xl mx-auto space-y-6">
               {questions.map((q, index) => {
                 const id = index.toString();
-                const allChoices = [
-                  ...q.wrong_answers,
-                  q.correct_answer,
-                ].sort();
+                const allChoices = q.wrong_answers;
 
                 return (
                   <div
