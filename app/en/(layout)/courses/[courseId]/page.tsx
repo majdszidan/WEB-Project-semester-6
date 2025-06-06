@@ -123,22 +123,12 @@ export default function CoursePage() {
                               : "bg-white border-gray-300 hover:bg-gray-100"
                           }`}
                         >
-                          {choice}
+                          {choice}{" "}
+                          {answers[id] &&
+                            (choice === q.correct_answer ? "✔️" : "❌")}
                         </button>
                       );
                     })}
-                    {answers[id] && (
-                      <p className="text-sm mt-1">
-                        {answers[id] === q.correct_answer ? (
-                          <span className="text-green-600">✔️ Correct</span>
-                        ) : (
-                          <span className="text-red-600">
-                            ❌ Incorrect. Correct answer:{" "}
-                            <strong>{q.correct_answer}</strong>
-                          </span>
-                        )}
-                      </p>
-                    )}
                   </div>
                 );
               })}
