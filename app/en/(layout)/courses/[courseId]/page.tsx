@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { GenerateConveringQuestions } from "@/GeminiTools/generateCoveringQuestions";
 import { Question, SaveQuestions } from "@/FirebaseTools/SaveQuestions";
@@ -16,6 +16,7 @@ export default function CoursePage() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -26,12 +27,11 @@ export default function CoursePage() {
 
   useEffect(() => {
     if (!username) return;
-    GetCourse(courseId)
-      .then((course) => {
-        setCourse(course);
-      })
-      .catch((error) => console.error(error));
-  }, [courseId, username]);
+    GetCourse(courseId).then((course) => {
+      if (course == null) router.replace("/404");
+      setCourse(course);
+    });
+  }, [courseId, router, username]);
 
   useEffect(() => {
     if (course) {
@@ -55,82 +55,87 @@ export default function CoursePage() {
   };
 
   return (
-    <div className="pt-15 bg-white h-screen">
-      <div className="p-6 overflow-auto h-full text-black space-y-8">
-        <h1 className="text-3xl font-bold text-center text-blue-800">
-          {course?.name}
-        </h1>
+    course?.name && (
+      <div className="pt-15 bg-white h-screen">
+        <div className="p-6 overflow-auto h-full text-black space-y-8">
+          <h1 className="text-3xl font-bold text-center text-blue-800">
+            {course?.name}
+          </h1>
 
-        {loading ? (
-          <div className="max-w-3xl mx-auto space-y-6">
-            {Array.from({ length: 10 }).map((_, index) => (
-              <div
-                key={index}
-                className="border border-gray-400 p-4 rounded-lg shadow space-y-4 bg-gray-50 animate-pulse"
-              >
-                {/* Skeleton for the question */}
-                <div className="h-6 bg-gray-300 rounded w-3/4"></div>
-
-                {/* Skeleton for the answer choices */}
-                <div className="space-y-3 pt-2">
-                  <div className="h-10 bg-gray-300 rounded w-full"></div>
-                  <div className="h-10 bg-gray-300 rounded w-full"></div>
-                  <div className="h-10 bg-gray-300 rounded w-full"></div>
-                  <div className="h-10 bg-gray-300 rounded w-full"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="max-w-3xl mx-auto space-y-6">
-            {questions.map((q, index) => {
-              const id = index.toString();
-              const allChoices = [...q.wrong_answers, q.correct_answer].sort();
-
-              return (
+          {loading ? (
+            <div className="max-w-3xl mx-auto space-y-6">
+              {Array.from({ length: 10 }).map((_, index) => (
                 <div
-                  key={id}
-                  className="border p-4 rounded-lg shadow space-y-3 bg-gray-50"
+                  key={index}
+                  className="border border-gray-400 p-4 rounded-lg shadow space-y-4 bg-gray-50 animate-pulse"
                 >
-                  <h2 className="text-lg font-semibold">{q.question}</h2>
-                  {allChoices.map((choice) => {
-                    const isSelected = answers[id] === choice;
-                    const isCorrect = choice === q.correct_answer;
+                  {/* Skeleton for the question */}
+                  <div className="h-6 bg-gray-300 rounded w-3/4"></div>
 
-                    return (
-                      <button
-                        key={choice}
-                        onClick={() => handleAnswer(id, choice)}
-                        className={`w-full text-left px-4 py-2 rounded border transition ${
-                          isSelected
-                            ? isCorrect
-                              ? "bg-green-100 border-green-500 text-green-800"
-                              : "bg-red-100 border-red-500 text-red-800"
-                            : "bg-white border-gray-300 hover:bg-gray-100"
-                        }`}
-                      >
-                        {choice}
-                      </button>
-                    );
-                  })}
-                  {answers[id] && (
-                    <p className="text-sm mt-1">
-                      {answers[id] === q.correct_answer ? (
-                        <span className="text-green-600">✔️ Correct</span>
-                      ) : (
-                        <span className="text-red-600">
-                          ❌ Incorrect. Correct answer:{" "}
-                          <strong>{q.correct_answer}</strong>
-                        </span>
-                      )}
-                    </p>
-                  )}
+                  {/* Skeleton for the answer choices */}
+                  <div className="space-y-3 pt-2">
+                    <div className="h-10 bg-gray-300 rounded w-full"></div>
+                    <div className="h-10 bg-gray-300 rounded w-full"></div>
+                    <div className="h-10 bg-gray-300 rounded w-full"></div>
+                    <div className="h-10 bg-gray-300 rounded w-full"></div>
+                  </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
+              ))}
+            </div>
+          ) : (
+            <div className="max-w-3xl mx-auto space-y-6">
+              {questions.map((q, index) => {
+                const id = index.toString();
+                const allChoices = [
+                  ...q.wrong_answers,
+                  q.correct_answer,
+                ].sort();
+
+                return (
+                  <div
+                    key={id}
+                    className="border p-4 rounded-lg shadow space-y-3 bg-gray-50"
+                  >
+                    <h2 className="text-lg font-semibold">{q.question}</h2>
+                    {allChoices.map((choice) => {
+                      const isSelected = answers[id] === choice;
+                      const isCorrect = choice === q.correct_answer;
+
+                      return (
+                        <button
+                          key={choice}
+                          onClick={() => handleAnswer(id, choice)}
+                          className={`w-full text-left px-4 py-2 rounded border transition ${
+                            isSelected
+                              ? isCorrect
+                                ? "bg-green-100 border-green-500 text-green-800"
+                                : "bg-red-100 border-red-500 text-red-800"
+                              : "bg-white border-gray-300 hover:bg-gray-100"
+                          }`}
+                        >
+                          {choice}
+                        </button>
+                      );
+                    })}
+                    {answers[id] && (
+                      <p className="text-sm mt-1">
+                        {answers[id] === q.correct_answer ? (
+                          <span className="text-green-600">✔️ Correct</span>
+                        ) : (
+                          <span className="text-red-600">
+                            ❌ Incorrect. Correct answer:{" "}
+                            <strong>{q.correct_answer}</strong>
+                          </span>
+                        )}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    )
   );
 }
