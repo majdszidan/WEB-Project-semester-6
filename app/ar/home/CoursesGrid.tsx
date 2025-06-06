@@ -3,21 +3,31 @@ import React, { useEffect, useState } from "react";
 import CourseCard from "./CourseCard";
 import { GetCourses } from "@/FirebaseTools/GetCourses";
 import { Course } from "@/FirebaseTools/CreateCourse";
+import { auth } from "@/firebase";
 
 export default function CoursesGrid() {
   const [courses, setCourses] = useState<Course[]>([]);
+  const [user, setUser] = useState(auth.currentUser);
+
+  useEffect(() => {
+    return auth.onAuthStateChanged((user) => {
+      if (user === null) return;
+      setUser(user);
+    });
+  }, []);
 
   useEffect(() => {
     const unsub = GetCourses(setCourses);
+
     return unsub;
-  }, []);
+  }, [user]);
 
   return (
     <>
       {courses.length > 0 ? (
         <>
           <h2 className="text-2xl font-semibold text-white mb-6">
-            Choose a Course
+            الكورسات الخاصة بك
           </h2>
           <div
             id="courses-grid"
@@ -29,9 +39,9 @@ export default function CoursesGrid() {
           </div>
         </>
       ) : (
-        <div className="flex justify-center left-0 top-0 fixed w-screen items-center h-screen font-extrabold text-xl text ">
-          New User :) Please Add Your First Course 
-          <span className="text-blue-500"> (Click on the + icon)</span>
+        <div className="flex flex-col justify-center left-0 top-0 fixed w-screen items-center h-screen font-extrabold text-xl text ">
+          <span>لم يتم انشاء كورسات </span>
+          <span className="text-blue-500"> (اضغط على + لانشاء كورس)</span>
         </div>
       )}
     </>

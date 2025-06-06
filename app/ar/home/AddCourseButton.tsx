@@ -8,8 +8,8 @@ import {
   getSyllabus,
   Syllabus,
 } from "@/GeminiTools/getSyllabus";
-import { useLanguages } from "../useLanguages";
 import { CreateCourse } from "@/FirebaseTools/CreateCourse";
+import { LanguageList } from "@/app/Languages";
 
 export default function AddCourseButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,9 +19,10 @@ export default function AddCourseButton() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [syllabus, setSyllabus] = useState<CourseSyllabus | null>(null);
-  const [selectedTopics, setSelectedTopics] = useState<Set<Syllabus>>(new Set());
+  const [selectedTopics, setSelectedTopics] = useState<Set<Syllabus>>(
+    new Set()
+  );
   const [showSyllabusModal, setShowSyllabusModal] = useState(false);
-  const languages = useLanguages();
 
   useEffect(() => {
     setCourseName("");
@@ -35,7 +36,7 @@ export default function AddCourseButton() {
 
     const user = auth.currentUser;
     if (!user) {
-      setError("You must be logged in to generate a syllabus.");
+      setError("يجب عليك تسجيل الدخول لإنشاء منهج دراسي.");
       return;
     }
 
@@ -48,11 +49,12 @@ export default function AddCourseButton() {
       });
 
       setSyllabus(aiSyllabus);
+      // ✅ Pre-check all topics
       const allTitles = new Set(aiSyllabus.core_concepts);
       setSelectedTopics(allTitles);
       setShowSyllabusModal(true);
     } catch (err) {
-      setError("Failed to generate syllabus. Please try again.");
+      setError("فشل إنشاء المنهج الدراسي. يرجى المحاولة مرة أخرى.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -83,7 +85,7 @@ export default function AddCourseButton() {
               </button>
 
               <h2 className="text-2xl font-bold text-black text-center mb-6">
-                Add New Course
+                إضافة دورة جديدة
               </h2>
 
               {error && (
@@ -94,35 +96,34 @@ export default function AddCourseButton() {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Course Name
+                  <label className="block text-sm font-medium text-gray-700 text-right">
+                    اسم الدورة
                   </label>
                   <input
                     type="text"
                     value={courseName}
-                    placeholder="Name of the course"
+                    placeholder="اسم الدورة التدريبية"
                     onChange={(e) => setCourseName(e.target.value)}
-                    className="mt-1 block w-full border text-black border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full border text-black border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-right"
                     required
                     disabled={loading}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-black">
-                    Language
+                  <label className="block text-sm font-medium text-black text-right">
+                    اللغة
                   </label>
                   <select
                     value={language}
                     onChange={(e) => setLanguage(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 text-black rounded-md shadow-sm px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full border border-gray-300 text-black rounded-md shadow-sm px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-right"
                     required
-                    disabled={loading || languages.length === 0}
                   >
                     <option value="" disabled>
-                      Select a language
+                      اختر لغة
                     </option>
-                    {languages.map((lang) => (
+                    {LanguageList.map((lang) => (
                       <option key={lang.code} value={lang.name}>
                         {lang.name}
                       </option>
@@ -131,16 +132,16 @@ export default function AddCourseButton() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Description
+                  <label className="block text-sm font-medium text-gray-700 text-right">
+                    الوصف
                   </label>
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="mt-1 block w-full text-black border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full text-black border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-blue-500 focus:border-blue-500 text-right"
                     rows={4}
                     required
-                    placeholder="Describe the course topic, e.g. 'Web Development', 'Imaginary numbers', etc."
+                    placeholder="صف موضوع الدورة، على سبيل المثال: 'تطوير الويب'، 'الأعداد المركبة'، إلخ."
                     disabled={loading}
                   />
                 </div>
@@ -153,7 +154,7 @@ export default function AddCourseButton() {
                       loading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
                     } text-white py-2 px-4 rounded-md shadow transition`}
                   >
-                    {loading ? "Generating..." : "Generate Syllabus"}
+                    {loading ? "جاري إنشاء المنهج..." : "إنشاء المنهج"}
                   </button>
                 </div>
               </form>
@@ -162,16 +163,17 @@ export default function AddCourseButton() {
         </>
       )}
 
+      {/* AI Syllabus Modal */}
       {showSyllabusModal && syllabus && (
         <>
           <div className="fixed inset-0 z-40 w-screen h-screen bg-black opacity-50"></div>
           <div className="fixed inset-0 z-50 flex items-center justify-center">
             <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
               <h3 className="text-2xl font-semibold text-black mb-4 text-center">
-                Choose Syllabus Topics
+                اختر مواضيع المنهج
               </h3>
 
-              <ul className="space-y-2 max-h-80 overflow-y-auto pr-2">
+              <ul className="space-y-2 max-h-80 overflow-y-auto pr-2 text-right">
                 {syllabus.core_concepts.map((item, index) => (
                   <li key={index} className="flex items-start space-x-2">
                     <input
@@ -182,10 +184,11 @@ export default function AddCourseButton() {
                           const newSet = new Set(prev);
                           if (newSet.has(item)) newSet.delete(item);
                           else newSet.add(item);
+
                           return newSet;
                         });
                       }}
-                      className="mt-1"
+                      className="mt-1 ml-2"
                     />
                     <div>
                       <p className="text-black font-medium">{item.title}</p>
@@ -202,32 +205,30 @@ export default function AddCourseButton() {
                   onClick={() => setShowSyllabusModal(false)}
                   className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded"
                 >
-                  Back
+                  رجوع
                 </button>
                 <button
-                  onClick={async () => {
-                    try {
-                      await CreateCourse({
-                        name: courseName,
-                        language: language,
-                        description: syllabus.course_summary,
-                        topics: selectedTopics,
-                        icon: syllabus.icon,
-                        progress: 0,
-                        genre: syllabus.topic_area,
-                        lastAccessed: new Date(),
-                        created: new Date(),
-                      });
-
-                      setShowSyllabusModal(false);
-                      setIsOpen(false);
-                    } catch (err: any) {
-                      alert(err.message);
-                    }
+                  onClick={() => {
+                    CreateCourse({
+                      name: courseName,
+                      language: language,
+                      description: syllabus.course_summary,
+                      topics: selectedTopics,
+                      icon: syllabus.icon,
+                      progress: 0,
+                      genre: syllabus.topic_area,
+                      lastAccessed: new Date(),
+                      created: new Date(),
+                    })
+                      .then(() => {
+                        setShowSyllabusModal(false);
+                        setIsOpen(false);
+                      })
+                      .catch((err) => alert(err.message));
                   }}
                   className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
                 >
-                  Create
+                  إنشاء الدورة
                 </button>
               </div>
             </div>
