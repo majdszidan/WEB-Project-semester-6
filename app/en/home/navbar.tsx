@@ -1,22 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { auth } from "@/firebase";
 import { ChevronDown, User, LogOut } from "lucide-react";
 import Link from "next/link";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { LanguageList } from "@/app/Languages";
+import { LanguageList, translatedPages } from "@/app/Languages";
 
 export default function NavBar() {
   const router = useRouter(); // Initialize router
   const [languageIsOpen, setLanguageIsOpen] = useState(false);
+  const [username, setUsername] = useState(auth.currentUser?.email || "");
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (!user) {
+        document.cookie = "token=;";
+        router.replace("/");
+      } else {
+        setUsername(user?.email ?? "");
+      }
+    });
+    return () => unsubscribe();
+  }, [router]);
 
   // Handle logout
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      router.replace("/"); // Redirect to index page
     } catch (error) {
       console.error("Logout error", error);
     }
@@ -25,7 +37,7 @@ export default function NavBar() {
   return (
     <>
       <nav className="bg-white shadow fixed w-full z-50">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl px-4 mx-auto">
           <div className="flex justify-between h-16">
             <div className="flex">
               {/* Logo */}
@@ -37,7 +49,7 @@ export default function NavBar() {
             </div>
 
             {/* Language Selector */}
-            <div className="hidden sm:flex items-center ml-auto">
+            <div className="hidden sm:flex items-center ms-auto">
               <div className="relative" id="language-dropdown-container">
                 <button
                   type="button"
@@ -48,18 +60,25 @@ export default function NavBar() {
                   }}
                 >
                   <span id="selected-language">English</span>
-                  <ChevronDown className="ml-1 text-xs"></ChevronDown>
+                  <ChevronDown className="ms-1 text-xs"></ChevronDown>
                 </button>
                 <dialog
                   open={languageIsOpen}
                   id="language-dropdown"
-                  className="absolute right-0 mt-2 w-48 rounded-md shadow-lg max-h-80 overflow-y-auto bg-white ring-1 ring-black ring-opacity-5"
+                  className="absolute end-0 mt-2 w-48 rounded-md shadow-lg max-h-80 overflow-y-auto bg-white ring-1 ring-black ring-opacity-5"
                 >
-                  {LanguageList.map((language) => {
+                  {LanguageList.filter((language) =>
+                    translatedPages.includes(language.code)
+                  ).map((language) => {
                     return (
                       <Link
                         key={language.code}
                         href={"#"}
+                        onClick={async () => {
+                          setLanguageIsOpen(false);
+                          document.cookie = `lang=${language.code}`;
+                          router.refresh();
+                        }}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         {language.name + " (" + language.code + ")"}
@@ -71,20 +90,19 @@ export default function NavBar() {
             </div>
 
             {/* Auth Section */}
-            <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-2">
+            <div className="hidden sm:ms-6 sm:flex sm:items-center space-x-2">
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2">
-                  <User className="w-5 h-5 text-indigo-600" />
                   <span className="text-sm font-bold font-large text-black">
-                    {auth.currentUser?.displayName ||
-                      auth.currentUser?.email?.split("@")[0]}
+                    {username.split("@")[0]}
                   </span>
+                  <User className="w-5 h-5 text-indigo-600" />
                 </div>
                 <button
                   onClick={handleLogout}
                   className="flex items-center px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition"
                 >
-                  <LogOut className="w-4 h-4 mr-1" />
+                  <LogOut className="w-4 h-4 me-1" />
                   Logout
                 </button>
               </div>
