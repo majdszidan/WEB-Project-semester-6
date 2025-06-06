@@ -10,6 +10,7 @@ export default function CourseCard({
   genre,
   lastAccessed,
   description,
+  id,
 }: Course) {
   return (
     <div className="group relative bg-white border border-gray-100 rounded-2xl p-6 w-full max-w-xs shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300 overflow-hidden">
@@ -71,7 +72,7 @@ export default function CourseCard({
           </div>
 
           <div className="pt-2">
-            <Link href={`/course/${encodeURIComponent(name)}`}>
+            <Link href={`/courses/${encodeURIComponent(id!)}`}>
               <button className="w-full mt-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
                 Go to Course
               </button>

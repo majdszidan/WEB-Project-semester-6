@@ -19,7 +19,7 @@ export function GetQuestions(
         return { ...data, id: doc.id };
       });
 
-      onData(questions as Question[]);
+      onData(questions as unknown as Question[]);
     }
   );
   return unsub;

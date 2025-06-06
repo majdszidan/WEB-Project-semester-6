@@ -30,3 +30,10 @@ export async function SaveQuestions(courseId: string, quiz: CoveringQuestions) {
     { progress: quiz.comprehension_score }
   );
 }
+
+export interface Question {
+  question: string;
+  correct_answer: string;
+  wrong_answers: string[];
+  topic_covered: string;
+}
