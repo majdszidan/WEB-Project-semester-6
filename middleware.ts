@@ -6,14 +6,19 @@ export async function middleware(request: NextRequest) {
     request.cookies.get("token")?.value?.toString() ?? ""
   );
 
+  const lang = request.cookies.get("lang")?.value?.toString() ?? "en";
+  console.log(request.nextUrl.pathname);
+
   if (!verified && request.nextUrl.pathname !== "/") {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL(`/`, request.url));
   }
   if (verified && request.nextUrl.pathname === "/") {
-    return NextResponse.redirect(new URL("/home", request.url));
+    return NextResponse.redirect(new URL(`/home`, request.url));
   }
 
-  return NextResponse.next();
+  return NextResponse.rewrite(
+    new URL(`/${lang}${request.nextUrl.pathname}`, request.url)
+  );
 }
 
 async function verifyUser(token: string) {

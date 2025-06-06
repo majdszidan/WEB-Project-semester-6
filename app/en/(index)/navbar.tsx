@@ -1,17 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import LoginModal from "./login";
 import SignUpModal from "./signup";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
-import { useLanguages } from "../useLanguages";
+import { LanguageList, translatedPages } from "@/app/Languages";
+import { useRouter } from "next/navigation";
 
 export default function NavBar() {
   const [loginIsOpen, setLoginIsOpen] = useState(false);
   const [registerIsOpen, setRegisterIsOpen] = useState(false);
   const [languageIsOpen, setLanguageIsOpen] = useState(false);
-  const languages = useLanguages();
+  const router = useRouter();
 
   return (
     <>
@@ -46,11 +47,18 @@ export default function NavBar() {
                   id="language-dropdown"
                   className="absolute right-0 mt-2 w-48 rounded-md shadow-lg max-h-80 overflow-y-auto bg-white ring-1 ring-black ring-opacity-5"
                 >
-                  {languages.map((language) => {
+                  {LanguageList.filter((language) =>
+                    translatedPages.includes(language.code)
+                  ).map((language) => {
                     return (
                       <Link
                         key={language.code}
                         href={"#"}
+                        onClick={async () => {
+                          setLanguageIsOpen(false);
+                          document.cookie = `lang=${language.code}`;
+                          router.refresh();
+                        }}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         {language.name + " (" + language.code + ")"}
