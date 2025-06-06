@@ -42,9 +42,9 @@ export default function NavBar() {
             <div className="flex">
               {/* Logo */}
               <div className="flex-shrink-0 flex items-center">
-                <a href="#" className="text-4xl font-bold text-indigo-600">
+                <Link href="/" className="text-4xl font-bold text-indigo-600">
                   EduMate
-                </a>
+                </Link>
               </div>
             </div>
 
