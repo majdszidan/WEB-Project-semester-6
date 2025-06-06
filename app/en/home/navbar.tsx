@@ -19,7 +19,7 @@ export default function NavBar() {
         document.cookie = "token=;";
         router.replace("/");
       } else {
-        setUsername(user?.email ?? "");
+        setUsername(user.displayName ?? user.email?.split("@")[0] ?? "");
       }
     });
     return () => unsubscribe();

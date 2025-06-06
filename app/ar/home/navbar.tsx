@@ -19,7 +19,7 @@ export default function NavBar() {
         document.cookie = "token=;";
         router.replace("/");
       } else {
-        setUsername(user?.email ?? "");
+        setUsername(user.displayName ?? user.email?.split("@")[0] ?? "");
       }
     });
     return () => unsubscribe();
@@ -94,7 +94,7 @@ export default function NavBar() {
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2">
                   <span className="text-sm font-bold font-large text-black">
-                    {username.split("@")[0]}
+                    {username}
                   </span>
                   <User className="w-5 h-5 text-indigo-600" />
                 </div>
