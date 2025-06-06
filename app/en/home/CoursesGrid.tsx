@@ -3,14 +3,24 @@ import React, { useEffect, useState } from "react";
 import CourseCard from "./CourseCard";
 import { GetCourses } from "@/FirebaseTools/GetCourses";
 import { Course } from "@/FirebaseTools/CreateCourse";
+import { auth } from "@/firebase";
 
 export default function CoursesGrid() {
   const [courses, setCourses] = useState<Course[]>([]);
+  const [user, setUser] = useState(auth.currentUser);
+
+  useEffect(() => {
+    return auth.onAuthStateChanged((user) => {
+      if (user === null) return;
+      setUser(user);
+    });
+  }, []);
 
   useEffect(() => {
     const unsub = GetCourses(setCourses);
+
     return unsub;
-  }, []);
+  }, [user]);
 
   return (
     <>
@@ -30,7 +40,7 @@ export default function CoursesGrid() {
         </>
       ) : (
         <div className="flex justify-center left-0 top-0 fixed w-screen items-center h-screen font-extrabold text-xl text ">
-          New User :) Please Add Your First Course 
+          New User :) Please Add Your First Course
           <span className="text-blue-500"> (Click on the + icon)</span>
         </div>
       )}
