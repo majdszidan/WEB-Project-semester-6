@@ -103,7 +103,9 @@ export default function CoursePage() {
                     key={id}
                     className="border p-4 rounded-lg shadow space-y-3 bg-gray-50"
                   >
-                    <h2 className="text-lg font-semibold">{q.question}</h2>
+                    <h2 dir="auto" className="text-lg font-semibold">
+                      {q.question}
+                    </h2>
                     {allChoices.map((choice) => {
                       const isSelected = answers[id] === choice;
                       const isCorrect = choice === q.correct_answer;
@@ -111,8 +113,9 @@ export default function CoursePage() {
                       return (
                         <button
                           key={choice}
+                          dir="auto"
                           onClick={() => handleAnswer(id, choice)}
-                          className={`w-full text-left px-4 py-2 rounded border transition ${
+                          className={`w-full text-start  px-4 py-2 rounded border transition  ${
                             isSelected
                               ? isCorrect
                                 ? "bg-green-100 border-green-500 text-green-800"
