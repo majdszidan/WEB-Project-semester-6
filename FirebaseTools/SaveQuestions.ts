@@ -31,9 +31,30 @@ export async function SaveQuestions(courseId: string, quiz: CoveringQuestions) {
   );
 }
 
+export async function AnswerQuestion(
+  courseId: string,
+  questionId: string,
+  answer: string
+) {
+  await updateDoc(
+    doc(
+      firestore,
+      "users/" +
+        auth.currentUser?.uid +
+        "/courses/" +
+        courseId +
+        "/questions/" +
+        questionId
+    ),
+    { user_answer: answer }
+  );
+}
+
 export interface Question {
   question: string;
   correct_answer: string;
   wrong_answers: string[];
   topic_covered: string;
+  user_answer?: string;
+  id: string;
 }

@@ -3,7 +3,11 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { GenerateConveringQuestions } from "@/GeminiTools/generateCoveringQuestions";
-import { Question, SaveQuestions } from "@/FirebaseTools/SaveQuestions";
+import {
+  AnswerQuestion,
+  Question,
+  SaveQuestions,
+} from "@/FirebaseTools/SaveQuestions";
 import { GetCourse } from "@/FirebaseTools/GetCourses";
 import { GetQuestions } from "@/FirebaseTools/GetQuestions";
 import { auth } from "@/firebase";
@@ -55,6 +59,14 @@ export default function CoursePage() {
           );
         }
         setQuestions(questions);
+        setAnswers(() => {
+          const newAnswers: Record<string, string> = {};
+          questions.forEach((question) => {
+            if (question.user_answer === undefined) return;
+            newAnswers[question.id] = question.user_answer;
+          });
+          return newAnswers;
+        });
         setLoading(false);
       });
     }
@@ -62,6 +74,7 @@ export default function CoursePage() {
 
   const handleAnswer = (id: string, selected: string) => {
     setAnswers((prev) => ({ ...prev, [id]: selected }));
+    AnswerQuestion(courseId, id, selected);
   };
 
   return (
@@ -94,8 +107,8 @@ export default function CoursePage() {
             </div>
           ) : (
             <div className="max-w-3xl mx-auto space-y-6">
-              {questions.map((q, index) => {
-                const id = index.toString();
+              {questions.map((q) => {
+                const id = q.id;
                 const allChoices = q.wrong_answers;
 
                 return (
