@@ -114,6 +114,7 @@ export default function CoursePage() {
                         <button
                           key={choice}
                           dir="auto"
+                          disabled={answers[id] !== undefined}
                           onClick={() => handleAnswer(id, choice)}
                           className={`w-full text-start  px-4 py-2 rounded border transition  ${
                             isSelected
