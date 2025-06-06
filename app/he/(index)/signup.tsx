@@ -1,6 +1,5 @@
-import { auth, firestore } from "@/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { auth } from "@/firebase";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { CheckCircle2Icon, InfoIcon, XIcon } from "lucide-react";
 import { FormEvent, useState } from "react";
 export default function SignUpModal({
@@ -49,15 +48,10 @@ export default function SignUpModal({
         email.toString(),
         password.toString()
       )
-        .then((userCredential) => {
-          setDoc(doc(firestore, "users", userCredential.user.uid), {
-            fisrt_name: fName,
-            last_name: lName,
-          })
-            .then(() => setSuccess(true))
-            .catch((error) => {
-              setError(error.message);
-            });
+        .then(async (userCredential) => {
+          await updateProfile(userCredential.user, {
+            displayName: fName + " " + lName,
+          });
         })
         .catch((error) => {
           setError(error.message);
