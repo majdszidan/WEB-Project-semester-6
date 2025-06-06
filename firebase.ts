@@ -31,6 +31,10 @@ if (typeof document !== "undefined") {
     if (!user) {
       document.cookie =
         "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    } else {
+      user.getIdToken(true).then((token) => {
+        document.cookie = "token=" + token + ";";
+      });
     }
   });
   auth.onIdTokenChanged((user) => {
