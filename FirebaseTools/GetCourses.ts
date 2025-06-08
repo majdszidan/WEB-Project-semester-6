@@ -1,5 +1,11 @@
 import { auth, firestore } from "@/firebase";
-import { onSnapshot, collection, Timestamp } from "firebase/firestore";
+import {
+  onSnapshot,
+  collection,
+  Timestamp,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 import { Course } from "./CreateCourse";
 
 export function GetCourses(onData: (courses: Course[]) => void) {
@@ -22,4 +28,11 @@ export function GetCourses(onData: (courses: Course[]) => void) {
     }
   );
   return unsub;
+}
+
+export async function GetCourse(courseId: string) {
+  const docSnap = await getDoc(
+    doc(firestore, "users/" + auth.currentUser?.uid + "/courses/" + courseId)
+  );
+  return docSnap.data() as Course;
 }

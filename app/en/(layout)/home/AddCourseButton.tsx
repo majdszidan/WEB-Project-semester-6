@@ -19,9 +19,7 @@ export default function AddCourseButton() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [syllabus, setSyllabus] = useState<CourseSyllabus | null>(null);
-  const [selectedTopics, setSelectedTopics] = useState<Set<Syllabus>>(
-    new Set()
-  );
+  const [selectedTopics, setSelectedTopics] = useState<Set<Syllabus>>(new Set());
   const [showSyllabusModal, setShowSyllabusModal] = useState(false);
 
   useEffect(() => {
@@ -49,7 +47,6 @@ export default function AddCourseButton() {
       });
 
       setSyllabus(aiSyllabus);
-      // ✅ Pre-check all topics
       const allTitles = new Set(aiSyllabus.core_concepts);
       setSelectedTopics(allTitles);
       setShowSyllabusModal(true);
@@ -163,7 +160,6 @@ export default function AddCourseButton() {
         </>
       )}
 
-      {/* AI Syllabus Modal */}
       {showSyllabusModal && syllabus && (
         <>
           <div className="fixed inset-0 z-40 w-screen h-screen bg-black opacity-50"></div>
@@ -184,7 +180,6 @@ export default function AddCourseButton() {
                           const newSet = new Set(prev);
                           if (newSet.has(item)) newSet.delete(item);
                           else newSet.add(item);
-
                           return newSet;
                         });
                       }}
@@ -208,23 +203,25 @@ export default function AddCourseButton() {
                   Back
                 </button>
                 <button
-                  onClick={() => {
-                    CreateCourse({
-                      name: courseName,
-                      language: language,
-                      description: syllabus.course_summary,
-                      topics: selectedTopics,
-                      icon: syllabus.icon,
-                      progress: 0,
-                      genre: syllabus.topic_area,
-                      lastAccessed: new Date(),
-                      created: new Date(),
-                    })
-                      .then(() => {
-                        setShowSyllabusModal(false);
-                        setIsOpen(false);
-                      })
-                      .catch((err) => alert(err.message));
+                  onClick={async () => {
+                    try {
+                      await CreateCourse({
+                        name: courseName,
+                        language: language,
+                        description: syllabus.course_summary,
+                        topics: selectedTopics,
+                        icon: syllabus.icon,
+                        progress: 0,
+                        genre: syllabus.topic_area,
+                        lastAccessed: new Date(),
+                        created: new Date(),
+                      });
+
+                      setShowSyllabusModal(false);
+                      setIsOpen(false);
+                    } catch (err: any) {
+                      alert(err.message);
+                    }
                   }}
                   className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
                 >
