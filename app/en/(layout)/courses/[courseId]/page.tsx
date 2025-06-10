@@ -9,9 +9,10 @@ import {
   SaveQuestions,
 } from "@/FirebaseTools/SaveQuestions";
 import { GetCourse } from "@/FirebaseTools/GetCourses";
-import { GetQuestions } from "@/FirebaseTools/GetQuestions";
+import { GetQuestions, GetQuizzes } from "@/FirebaseTools/GetQuestions";
 import { auth } from "@/firebase";
 import { Course } from "@/FirebaseTools/CreateCourse";
+import { DocumentReference } from "firebase/firestore";
 
 export default function CoursePage() {
   const { courseId } = useParams<{ courseId: string }>();
@@ -20,6 +21,7 @@ export default function CoursePage() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
+  const [quiz, setQuiz] = useState<DocumentReference | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -39,8 +41,8 @@ export default function CoursePage() {
 
   useEffect(() => {
     if (course) {
-      return GetQuestions(courseId, async (questions) => {
-        if (questions.length === 0) {
+      return GetQuizzes(courseId, async (quizzes) => {
+        if (quizzes.length === 0) {
           const quiz = await GenerateConveringQuestions({
             language: course.language,
             syllabus: Array.from(course.topics),
@@ -48,33 +50,38 @@ export default function CoursePage() {
           });
           SaveQuestions(courseId, quiz);
         }
-        for (let index = 0; index < questions.length; index++) {
-          const element = questions[index];
-          element.wrong_answers = [
-            ...element.wrong_answers,
-            element.correct_answer,
-          ];
-          element.wrong_answers = element.wrong_answers.sort(
-            () => Math.random() - 0.5
-          );
-        }
-        setQuestions(questions);
-        setAnswers(() => {
-          const newAnswers: Record<string, string> = {};
-          questions.forEach((question) => {
-            if (question.user_answer === undefined) return;
-            newAnswers[question.id] = question.user_answer;
-          });
-          return newAnswers;
-        });
-        setLoading(false);
+        const quiz = quizzes[0];
+        setQuiz(quiz);
       });
     }
   }, [courseId, course]);
 
+  useEffect(() => {
+    if (quiz) {
+      GetQuestions(quiz).then((questions) => {
+        setQuestions(
+          questions.map((q) => ({
+            ...q,
+            wrong_answers: [q.correct_answer, ...q.wrong_answers].sort(
+              () => 0.5 - Math.random()
+            ),
+          }))
+        );
+        setAnswers({});
+        for (let i = 0; i < questions.length; i++) {
+          if (questions[i].user_answer)
+            setAnswers((prev) => ({ ...prev, [i]: questions[i].user_answer }));
+        }
+      });
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
+  }, [quiz]);
+
   const handleAnswer = (id: string, selected: string) => {
     setAnswers((prev) => ({ ...prev, [id]: selected }));
-    AnswerQuestion(courseId, id, selected);
+    AnswerQuestion(courseId, quiz!.id, id, selected);
   };
 
   return (
