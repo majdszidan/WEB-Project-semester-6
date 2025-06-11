@@ -12,7 +12,7 @@ export async function SaveQuestions(courseId: string, quiz: CoveringQuestions) {
   await runTransaction(firestore, async (transaction) => {
     transaction.update(
       doc(firestore, "users/" + auth.currentUser?.uid + "/courses/" + courseId),
-      { progress: quiz.comprehension_score }
+      { progress: Math.round(quiz.comprehension_score * 100) }
     );
     const quizzesRef = collection(
       firestore,
