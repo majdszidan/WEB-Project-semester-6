@@ -13,6 +13,8 @@ import { GetQuestions, GetQuizzes } from "@/FirebaseTools/GetQuestions";
 import { auth } from "@/firebase";
 import { Course } from "@/FirebaseTools/CreateCourse";
 import { DocumentReference } from "firebase/firestore";
+import CourseNav from "./course_nav";
+import { GetPreviousAnswers } from "@/FirebaseTools/GetPreviousAnswers";
 
 export default function CoursePage() {
   const { courseId } = useParams<{ courseId: string }>();
@@ -21,8 +23,20 @@ export default function CoursePage() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
-  const [quiz, setQuiz] = useState<DocumentReference | null>(null);
+  const [quizzes, setQuizzes] = useState<DocumentReference[]>([]);
+  const [quiz, setQuiz] = useState<number>(0);
   const router = useRouter();
+
+  async function submit() {
+    setLoading(true);
+    GenerateConveringQuestions({
+      language: course!.language,
+      syllabus: Array.from(course!.topics),
+      prevQuestions: await GetPreviousAnswers(courseId),
+    }).then((q) => {
+      SaveQuestions(courseId, q);
+    });
+  }
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -50,15 +64,15 @@ export default function CoursePage() {
           });
           SaveQuestions(courseId, quiz);
         }
-        const quiz = quizzes[0];
-        setQuiz(quiz);
+        setQuizzes(quizzes);
+        setQuiz(0);
       });
     }
   }, [courseId, course]);
 
   useEffect(() => {
-    if (quiz) {
-      GetQuestions(quiz).then((questions) => {
+    if (quizzes.length > 0 && quizzes[quiz]) {
+      GetQuestions(quizzes[quiz]).then((questions) => {
         setQuestions(
           questions.map((q) => ({
             ...q,
@@ -77,11 +91,11 @@ export default function CoursePage() {
     } else {
       setLoading(true);
     }
-  }, [quiz]);
+  }, [quiz, quizzes]);
 
   const handleAnswer = (id: string, selected: string) => {
     setAnswers((prev) => ({ ...prev, [id]: selected }));
-    AnswerQuestion(courseId, quiz!.id, id, selected);
+    AnswerQuestion(courseId, quizzes[quiz].id, id, selected);
   };
 
   return (
@@ -91,7 +105,6 @@ export default function CoursePage() {
           <h1 className="text-3xl font-bold text-center text-blue-800">
             {course?.name}
           </h1>
-
           {loading ? (
             <div className="max-w-3xl mx-auto space-y-6">
               {Array.from({ length: 10 }).map((_, index) => (
@@ -114,6 +127,13 @@ export default function CoursePage() {
             </div>
           ) : (
             <div className="max-w-3xl mx-auto space-y-6">
+              <CourseNav
+                quizzes={quizzes}
+                quiz={quiz}
+                setQuiz={setQuiz}
+                canSubmit={Object.keys(answers).length === questions.length}
+                submit={submit}
+              />
               {questions.map((q) => {
                 const id = q.id;
                 const allChoices = q.wrong_answers;
@@ -153,6 +173,13 @@ export default function CoursePage() {
                   </div>
                 );
               })}
+              <CourseNav
+                quizzes={quizzes}
+                quiz={quiz}
+                setQuiz={setQuiz}
+                canSubmit={Object.keys(answers).length === questions.length}
+                submit={submit}
+              />
             </div>
           )}
         </div>
