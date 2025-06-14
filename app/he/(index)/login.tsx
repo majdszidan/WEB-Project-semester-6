@@ -1,6 +1,9 @@
 "use client";
 import { auth } from "@/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { InfoIcon, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
@@ -12,6 +15,7 @@ export default function LoginModal({
   setIsOpen: (isOpen: boolean) => void;
 }) {
   const [error, setError] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const router = useRouter();
   const login = (form: FormEvent<HTMLFormElement>) => {
     form.preventDefault();
@@ -87,6 +91,8 @@ export default function LoginModal({
                 <input
                   type="email"
                   name="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                   id="email"
                   className="login-email-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 />
@@ -113,6 +119,12 @@ export default function LoginModal({
                 <div className="login-forgot-password">
                   <a
                     href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (email.length > 0) {
+                        sendPasswordResetEmail(auth, email?.toString() ?? "");
+                      } else setError("אנא הזינו את כתובת האימייל שלכם");
+                    }}
                     className="login-forgot-link text-sm font-medium text-indigo-600 hover:text-indigo-500"
                   >
                     שכחתם סיסמה?
