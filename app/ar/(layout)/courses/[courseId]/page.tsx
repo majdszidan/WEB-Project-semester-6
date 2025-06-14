@@ -13,8 +13,10 @@ import { GetQuestions, GetQuizzes } from "@/FirebaseTools/GetQuestions";
 import { auth } from "@/firebase";
 import { Course } from "@/FirebaseTools/CreateCourse";
 import { DocumentReference } from "firebase/firestore";
-import CourseNav from "./course_nav";
 import { GetPreviousAnswers } from "@/FirebaseTools/GetPreviousAnswers";
+import CourseChatbot from "./course_chatbot";
+
+type TabType = "quiz" | "chatbot";
 
 export default function CoursePage() {
   const { courseId } = useParams<{ courseId: string }>();
@@ -25,6 +27,7 @@ export default function CoursePage() {
   const [username, setUsername] = useState("");
   const [quizzes, setQuizzes] = useState<DocumentReference[]>([]);
   const [quiz, setQuiz] = useState<number>(0);
+  const [activeTab, setActiveTab] = useState<TabType>("quiz");
   const router = useRouter();
 
   async function submit() {
@@ -98,6 +101,127 @@ export default function CoursePage() {
     AnswerQuestion(courseId, quizzes[quiz].id, id, selected);
   };
 
+  const renderQuizContent = () => (
+    <div className="max-w-3xl mx-auto space-y-6">
+      {/* Quiz Navigation */}
+      <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+        <div className="flex items-center space-x-4">
+          <span className="text-sm font-medium text-gray-700">Quiz:</span>
+          <div className="flex space-x-2">
+            {quizzes.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setQuiz(index)}
+                className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                  quiz === index
+                    ? "bg-blue-500 text-white"
+                    : "bg-white text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
+        </div>
+        <button
+          onClick={submit}
+          disabled={Object.keys(answers).length !== questions.length}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          Generate New Quiz
+        </button>
+      </div>
+      
+      {questions.map((q) => {
+        const id = q.id;
+        const allChoices = q.wrong_answers;
+
+        return (
+          <div
+            key={id}
+            className="border p-4 rounded-lg shadow space-y-3 bg-gray-50"
+          >
+            <h2 dir="auto" className="text-lg font-semibold">
+              {q.question}
+            </h2>
+            {allChoices.map((choice) => {
+              const isSelected = answers[id] === choice;
+              const isCorrect = choice === q.correct_answer;
+
+              return (
+                <button
+                  key={choice}
+                  dir="auto"
+                  disabled={answers[id] !== undefined}
+                  onClick={() => handleAnswer(id, choice)}
+                  className={`w-full text-start  px-4 py-2 rounded border transition  ${
+                    isSelected
+                      ? isCorrect
+                        ? "bg-green-100 border-green-500 text-green-800"
+                        : "bg-red-100 border-red-500 text-red-800"
+                      : "bg-white border-gray-300 hover:bg-gray-100"
+                  }`}
+                >
+                  {choice}{" "}
+                  {answers[id] &&
+                    (choice === q.correct_answer ? "✔️" : "❌")}
+                </button>
+              );
+            })}
+          </div>
+        );
+      })}
+      
+      {/* Bottom Quiz Navigation */}
+      <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+        <div className="flex items-center space-x-4">
+          <span className="text-sm font-medium text-gray-700">Quiz:</span>
+          <div className="flex space-x-2">
+            {quizzes.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setQuiz(index)}
+                className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                  quiz === index
+                    ? "bg-blue-500 text-white"
+                    : "bg-white text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
+        </div>
+        <button
+          onClick={submit}
+          disabled={Object.keys(answers).length !== questions.length}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          Generate New Quiz
+        </button>
+      </div>
+    </div>
+  );
+
+  const renderLoadingSkeleton = () => (
+    <div className="max-w-3xl mx-auto space-y-6">
+      {Array.from({ length: 10 }).map((_, index) => (
+        <div
+          key={index}
+          className="border border-gray-400 p-4 rounded-lg shadow space-y-4 bg-gray-50 animate-pulse"
+        >
+          <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+          <div className="space-y-3 pt-2">
+            <div className="h-10 bg-gray-300 rounded w-full"></div>
+            <div className="h-10 bg-gray-300 rounded w-full"></div>
+            <div className="h-10 bg-gray-300 rounded w-full"></div>
+            <div className="h-10 bg-gray-300 rounded w-full"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     course?.name && (
       <div className="pt-15 bg-white h-screen">
@@ -105,82 +229,42 @@ export default function CoursePage() {
           <h1 className="text-3xl font-bold text-center text-blue-800">
             {course?.name}
           </h1>
-          {loading ? (
-            <div className="max-w-3xl mx-auto space-y-6">
-              {Array.from({ length: 10 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="border border-gray-400 p-4 rounded-lg shadow space-y-4 bg-gray-50 animate-pulse"
-                >
-                  {/* Skeleton for the question */}
-                  <div className="h-6 bg-gray-300 rounded w-3/4"></div>
-
-                  {/* Skeleton for the answer choices */}
-                  <div className="space-y-3 pt-2">
-                    <div className="h-10 bg-gray-300 rounded w-full"></div>
-                    <div className="h-10 bg-gray-300 rounded w-full"></div>
-                    <div className="h-10 bg-gray-300 rounded w-full"></div>
-                    <div className="h-10 bg-gray-300 rounded w-full"></div>
-                  </div>
-                </div>
-              ))}
+          
+          {/* Tab Navigation */}
+          <div className="max-w-3xl mx-auto">
+            <div className="flex border-b border-gray-200">
+              <button
+                onClick={() => setActiveTab("quiz")}
+                className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${
+                  activeTab === "quiz"
+                    ? "border-blue-500 text-blue-600 bg-blue-50"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                }`}
+              >
+                Quiz
+              </button>
+              <button
+                onClick={() => setActiveTab("chatbot")}
+                className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${
+                  activeTab === "chatbot"
+                    ? "border-blue-500 text-blue-600 bg-blue-50"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                }`}
+              >
+                Chatbot
+              </button>
             </div>
-          ) : (
-            <div className="max-w-3xl mx-auto space-y-6">
-              <CourseNav
-                quizzes={quizzes}
-                quiz={quiz}
-                setQuiz={setQuiz}
-                canSubmit={Object.keys(answers).length === questions.length}
-                submit={submit}
-              />
-              {questions.map((q) => {
-                const id = q.id;
-                const allChoices = q.wrong_answers;
+          </div>
 
-                return (
-                  <div
-                    key={id}
-                    className="border p-4 rounded-lg shadow space-y-3 bg-gray-50"
-                  >
-                    <h2 dir="auto" className="text-lg font-semibold">
-                      {q.question}
-                    </h2>
-                    {allChoices.map((choice) => {
-                      const isSelected = answers[id] === choice;
-                      const isCorrect = choice === q.correct_answer;
-
-                      return (
-                        <button
-                          key={choice}
-                          dir="auto"
-                          disabled={answers[id] !== undefined}
-                          onClick={() => handleAnswer(id, choice)}
-                          className={`w-full text-start  px-4 py-2 rounded border transition  ${
-                            isSelected
-                              ? isCorrect
-                                ? "bg-green-100 border-green-500 text-green-800"
-                                : "bg-red-100 border-red-500 text-red-800"
-                              : "bg-white border-gray-300 hover:bg-gray-100"
-                          }`}
-                        >
-                          {choice}{" "}
-                          {answers[id] &&
-                            (choice === q.correct_answer ? "✔️" : "❌")}
-                        </button>
-                      );
-                    })}
-                  </div>
-                );
-              })}
-              <CourseNav
-                quizzes={quizzes}
-                quiz={quiz}
-                setQuiz={setQuiz}
-                canSubmit={Object.keys(answers).length === questions.length}
-                submit={submit}
-              />
-            </div>
+          {/* Tab Content */}
+          {activeTab === "quiz" && (
+            <>
+              {loading ? renderLoadingSkeleton() : renderQuizContent()}
+            </>
+          )}
+          
+          {activeTab === "chatbot" && (
+            <CourseChatbot course={course} courseId={courseId} />
           )}
         </div>
       </div>
