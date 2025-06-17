@@ -4,6 +4,8 @@ import CourseCard from "./CourseCard";
 import { GetCourses } from "@/FirebaseTools/GetCourses";
 import { Course } from "@/FirebaseTools/CreateCourse";
 import { auth } from "@/firebase";
+import arrow from "@/public/arrow-white.png";
+import Image from "next/image";
 
 export default function CoursesGrid() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -37,10 +39,15 @@ export default function CoursesGrid() {
           </div>
         </>
       ) : (
-        <div className="flex flex-col justify-center left-0 top-0 fixed w-screen items-center h-screen font-extrabold text-xl text ">
-          עדיין אין לך קורסים :)
-          <span className="text-blue-500"> (לחץ על ה + להייצר)</span>
-        </div>
+        <>
+          <div className="flex p-5 z-10 flex-col justify-center left-0 top-0 fixed w-screen items-center h-screen font-extrabold text-xl text ">
+            עדיין אין לך קורסים :)
+            <span className="text-blue-500"> (לחץ על ה + להייצר)</span>
+          </div>
+          <div className="fixed top-0 z-0 start-0 w-screen h-screen flex justify-start items-end  ">
+            <Image className="w-1/2 h-6/10" src={arrow} alt="" />
+          </div>
+        </>
       )}
     </>
   );
