@@ -7,7 +7,6 @@ export async function middleware(request: NextRequest) {
   );
 
   const lang = request.cookies.get("lang")?.value?.toString() ?? "en";
-  console.log(request.nextUrl.pathname);
 
   if (!verified && request.nextUrl.pathname !== "/") {
     return NextResponse.redirect(new URL(`/`, request.url));
