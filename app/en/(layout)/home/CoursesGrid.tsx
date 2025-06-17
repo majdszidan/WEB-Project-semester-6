@@ -17,9 +17,8 @@ export default function CoursesGrid() {
   }, []);
 
   useEffect(() => {
-    const unsub = GetCourses(setCourses);
-
-    return unsub;
+    if (user === null) return;
+    return GetCourses(setCourses);
   }, [user]);
 
   return (
