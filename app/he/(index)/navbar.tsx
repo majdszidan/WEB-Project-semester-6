@@ -52,7 +52,8 @@ export default function NavBar() {
                       <Link
                         key={language.code}
                         href={"#"}
-                        onClick={async () => {
+                        onClick={async (e) => {
+                          e.preventDefault();
                           setLanguageIsOpen(false);
                           document.cookie = `lang=${language.code}`;
                           router.refresh();
