@@ -15,6 +15,7 @@ import { Course } from "@/FirebaseTools/CreateCourse";
 import { DocumentReference } from "firebase/firestore";
 import { GetPreviousAnswers } from "@/FirebaseTools/GetPreviousAnswers";
 import CourseChatbot from "./course_chatbot";
+import CourseNav from "./course_nav";
 
 type TabType = "quiz" | "chatbot";
 
@@ -104,34 +105,14 @@ export default function CoursePage() {
   const renderQuizContent = () => (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Quiz Navigation */}
-      <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-        <div className="flex items-center space-x-4">
-          <span className="text-sm font-medium text-gray-700">Quiz:</span>
-          <div className="flex space-x-2">
-            {quizzes.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setQuiz(index)}
-                className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-                  quiz === index
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                {index + 1}
-              </button>
-            ))}
-          </div>
-        </div>
-        <button
-          onClick={submit}
-          disabled={Object.keys(answers).length !== questions.length}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          Generate New Quiz
-        </button>
-      </div>
-      
+      <CourseNav
+        quizzes={quizzes}
+        setQuiz={setQuiz}
+        quiz={quiz}
+        canSubmit={Object.keys(answers).length === questions.length}
+        submit={submit}
+      />
+
       {questions.map((q) => {
         const id = q.id;
         const allChoices = q.wrong_answers;
@@ -163,43 +144,22 @@ export default function CoursePage() {
                   }`}
                 >
                   {choice}{" "}
-                  {answers[id] &&
-                    (choice === q.correct_answer ? "✔️" : "❌")}
+                  {answers[id] && (choice === q.correct_answer ? "✔️" : "❌")}
                 </button>
               );
             })}
           </div>
         );
       })}
-      
+
       {/* Bottom Quiz Navigation */}
-      <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-        <div className="flex items-center space-x-4">
-          <span className="text-sm font-medium text-gray-700">Quiz:</span>
-          <div className="flex space-x-2">
-            {quizzes.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setQuiz(index)}
-                className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-                  quiz === index
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                {index + 1}
-              </button>
-            ))}
-          </div>
-        </div>
-        <button
-          onClick={submit}
-          disabled={Object.keys(answers).length !== questions.length}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          Generate New Quiz
-        </button>
-      </div>
+      <CourseNav
+        quizzes={quizzes}
+        setQuiz={setQuiz}
+        quiz={quiz}
+        canSubmit={Object.keys(answers).length === questions.length}
+        submit={submit}
+      />
     </div>
   );
 
@@ -229,7 +189,7 @@ export default function CoursePage() {
           <h1 className="text-3xl font-bold text-center text-blue-800">
             {course?.name}
           </h1>
-          
+
           {/* Tab Navigation */}
           <div className="max-w-3xl mx-auto">
             <div className="flex border-b border-gray-200">
@@ -241,7 +201,7 @@ export default function CoursePage() {
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
-                Quiz
+                اختبار
               </button>
               <button
                 onClick={() => setActiveTab("chatbot")}
@@ -251,21 +211,20 @@ export default function CoursePage() {
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
-                Chatbot
+                الدردشة
               </button>
             </div>
           </div>
 
           {/* Tab Content */}
-          {activeTab === "quiz" && (
-            <>
-              {loading ? renderLoadingSkeleton() : renderQuizContent()}
-            </>
-          )}
-          
-          {activeTab === "chatbot" && (
-            <CourseChatbot course={course} courseId={courseId} />
-          )}
+
+          <div hidden={activeTab !== "quiz"}>
+            {loading ? renderLoadingSkeleton() : renderQuizContent()}
+          </div>
+
+          <div hidden={activeTab !== "chatbot"}>
+            <CourseChatbot course={course} />
+          </div>
         </div>
       </div>
     )
