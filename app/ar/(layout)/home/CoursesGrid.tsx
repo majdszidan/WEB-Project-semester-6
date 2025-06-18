@@ -46,9 +46,11 @@ export default function CoursesGrid() {
             لم يتم انشاء كورسات
             <span className="text-blue-500"> (اضغط على + لانشاء كورس)</span>
           </div>
-          <div className="fixed top-0 z-0 start-0 w-screen h-screen flex justify-start items-end  ">
-            <Image className="w-1/2 h-6/10" src={arrow} alt="" />
-          </div>
+          <Image
+            className="w-1/2 h-1/3 pl-10 absolute bottom-20 right-10"
+            src={arrow}
+            alt=""
+          />
         </>
       )}
     </>
