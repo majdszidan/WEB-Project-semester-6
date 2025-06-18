@@ -26,18 +26,15 @@ export default function CourseChatbot({ course }: { course: Course }) {
 
   // Generate the welcome message once on mount
   useEffect(() => {
-    async function generateWelcomeMessage() {
-      setLoadingWelcome(true);
-      try {
-        // Compose a prompt to get a welcome message in the course language
-        const welcomePrompt = `You are a friendly and helpful course assistant. Write a warm welcome message to a student starting the course "${course.name}". Use ${course.language} language. Keep it simple, encouraging, and supportive.`;
-
-        const welcomeMessage = await answerQuestion(
-          course.language,
-          course.name,
-          welcomePrompt
-        );
-
+    setLoadingWelcome(true);
+    if (!course) return;
+    const welcomePrompt = `You are a friendly and helpful course assistant. Write a short one sentence warm welcome message to a student studing these topics: \`\`\`json\n${JSON.stringify(
+      course.topics
+    )}\`\`\`. Use ${
+      course.language
+    } language. Keep it simple, encouraging, and supportive.`;
+    answerQuestion(course.language, course.name, welcomePrompt)
+      .then((welcomeMessage) => {
         setMessages([
           {
             id: "welcome",
@@ -46,7 +43,8 @@ export default function CourseChatbot({ course }: { course: Course }) {
             timestamp: new Date(),
           },
         ]);
-      } catch {
+      })
+      .catch(() => {
         setMessages([
           {
             id: "welcome",
@@ -55,13 +53,11 @@ export default function CourseChatbot({ course }: { course: Course }) {
             timestamp: new Date(),
           },
         ]);
-      } finally {
+      })
+      .finally(() => {
         setLoadingWelcome(false);
-      }
-    }
-
-    generateWelcomeMessage();
-  }, [course.language, course.name]);
+      });
+  }, [course]);
 
   useEffect(() => {
     scrollToBottom();

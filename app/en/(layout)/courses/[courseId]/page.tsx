@@ -217,11 +217,14 @@ export default function CoursePage() {
           </div>
 
           {/* Tab Content */}
-          {activeTab === "quiz" && (
-            <>{loading ? renderLoadingSkeleton() : renderQuizContent()}</>
-          )}
 
-          {activeTab === "chatbot" && <CourseChatbot course={course} />}
+          <div hidden={activeTab !== "quiz"}>
+            {loading ? renderLoadingSkeleton() : renderQuizContent()}
+          </div>
+
+          <div hidden={activeTab !== "chatbot"}>
+            <CourseChatbot course={course} />
+          </div>
         </div>
       </div>
     )
