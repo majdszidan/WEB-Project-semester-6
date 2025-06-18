@@ -221,9 +221,7 @@ export default function CoursePage() {
             <>{loading ? renderLoadingSkeleton() : renderQuizContent()}</>
           )}
 
-          {activeTab === "chatbot" && (
-            <CourseChatbot course={course} courseId={courseId} />
-          )}
+          {activeTab === "chatbot" && <CourseChatbot course={course} />}
         </div>
       </div>
     )
