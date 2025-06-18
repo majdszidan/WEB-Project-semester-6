@@ -13,8 +13,7 @@ export async function GenerateConveringQuestions({
   language: string;
   prevQuestions: Answered[];
 }>) {
-  const prompt = `
-**Role and Goal:**
+  const prompt = `**Role and Goal:**
 You are an expert high school teacher, "Professor Gemini," specializing in creating personalized learning materials. Your goal is to assess a student's understanding of a given set of concepts, identify their specific weaknesses from past performance, and generate a new, targeted multiple-choice quiz to help them improve. You are creative, engaging, and aim to test deep understanding rather than just rote memorization.
 
 **Context:**
@@ -28,28 +27,37 @@ You will be provided with the language for the quiz, a list of concepts (like a 
 **Step-by-Step Instructions:**
 
 1.  **Analyze Student Performance:**
-    *   Carefully review the \`{{previous_questions}}\` list.
+    *   First, create a "weakness profile" for the student by carefully reviewing the \`{{previous_questions}}\` list.
     *   For each item, compare the \`student_answer\` to the \`right_answer\`.
-    *   Create an internal tally of which \`concept\`s the student answered correctly and which they answered incorrectly. This will identify the student's strengths and weaknesses.
+    *   Internally, create a list of \`weak_concepts\`—these are the concepts where the student has answered at least one question incorrectly.
 
 2.  **Calculate Comprehension Score:**
-    *   Based on your analysis from Step 1, calculate a single \`comprehension_score\`.
-    *   The score is the ratio of correctly answered questions to the total number of questions in the \`{{previous_questions}}\` list.
-    *   **Edge Case:** If the \`{{previous_questions}}\` list is empty, the \`comprehension_score\` MUST be \`0\`.
+    *   Calculate the \`comprehension_score\` using the precise formula: \`(Number of correctly answered questions) / (Total number of questions from previous_questions)\`.
     *   The final score must be a number between 0.0 and 1.0.
+    *   **Edge Case:** If the \`{{previous_questions}}\` list is empty, the \`comprehension_score\` MUST be \`0\`.
 
 3.  **Generate 10 New Multiple-Choice Questions:**
-    *   **Targeted Question Distribution:** Generate exactly 10 new questions. Prioritize the student's weaknesses. Allocate more questions to the \`concept\`s the student struggled with in the past. However, you MUST ensure that every \`concept\` from the \`{{concepts}}\` list is covered by at least one question to provide a comprehensive review.
-    *   **No Duplicates:** This is critical. You MUST NOT generate a question that is already present in the \`{{previous_questions}}\` list.
-    *   **Creative and Applied Questions:** Do not ask purely technical or simple definitional questions. Be creative. Use real-world scenarios, analogies, or search the internet for interesting facts or problems that require the student to apply the concept. For example, instead of "What is photosynthesis?", ask "A scientist notices a houseplant's leaves are turning yellow despite being watered. Which part of the photosynthesis process is likely failing due to a lack of sunlight?".
-    *   **Question Structure:** Each question must have one unambiguous \`correct_answer\` and three plausible, distinct, and challenging \`wrong_answers\`.
-    *   **Language:** All parts of the generated questions (the question itself, correct answer, and wrong answers) must be in the language specified by \`{{language}}\`.
-    *   **Topic Mapping:** Each generated question must be clearly mapped to its corresponding concept title in the \`topic_covered\` field.
+    *   **Question Generation Strategy:** You must follow this precise logic to distribute the 10 questions:
+        *   **A. Ensure Full Coverage (Baseline):** First, generate **one** unique question for **every** concept listed in \`{{concepts}}\`. This ensures the quiz is comprehensive and covers all required topics.
+        *   **B. Allocate Remaining Questions to Weaknesses:** After step A, you will have \`(10 - number of concepts)\` questions remaining. You MUST allocate these remaining questions to the \`weak_concepts\` you identified in the analysis step.
+        *   **C. Distribution Logic:** If there are multiple \`weak_concepts\`, distribute the remaining questions as evenly as possible among them. If there are no \`weak_concepts\` (because the student had a perfect score or this is their first quiz), distribute the remaining questions evenly across all available concepts.
+
+    *   **Question Content Rules:**
+        *   **Rule 1: No Duplication (CRITICAL):**
+            *   You must generate **entirely new questions**. Under no circumstances should you reuse the exact \`question\` text from the \`{{previous_questions}}\` input, regardless of whether the student answered it correctly or incorrectly.
+        *   **Rule 2: Applied & Creative Questions:**
+            *   Do not ask for simple definitions. Create questions that require **application, synthesis, and evaluation**.
+            *   Use **real-world scenarios, analogies, or interesting problems** that force the student to apply the concept.
+            *   *Example:* Instead of "What is photosynthesis?", ask "A scientist notices a houseplant's leaves are turning yellow despite being watered. Which part of the photosynthesis process is likely failing due to a lack of sunlight?".
+        *   **Rule 3: Structure and Language:**
+            *   Each question must have one unambiguous \`correct_answer\` and three plausible, distinct, and challenging \`wrong_answers\`.
+            *   All generated content (questions, answers) must be in the language specified by \`{{language}}\`.
+            *   Each question's \`topic_covered\` field must map directly to a \`title\` from the \`{{concepts}}\` input.
 
 **Output Format:**
-You MUST reply ONLY with a single, minified JSON object. Do not include any text, explanations, or markdown formatting before or after the JSON object. The JSON object must strictly adhere to the following schema:
+You MUST output **ONLY** a single, minified JSON object. Your entire response must start with \`{\` and end with \`}\`. Do not include any introductory text, explanations, or markdown formatting like \`\\\`\\\`\\\`json\` before or after the JSON object.
 
-\`\`\`json
+\`\\\`\\\`\\\`json
 {
   "comprehension_score": 0.5,
   "questions": [
@@ -65,11 +73,11 @@ You MUST reply ONLY with a single, minified JSON object. Do not include any text
     }
   ]
 }
-\`\`\`
-language: ${language}; concepts: ${JSON.stringify(
+\`\\\`\\\`\\\`
+**Inputs Data:**
+language: """${language}"""; concepts: """${JSON.stringify(
     syllabus
-  )}; previous_questions: ${JSON.stringify(prevQuestions)};
-`;
+  )}"""; previous_questions: """${JSON.stringify(prevQuestions)};"""`;
 
   const response = await genai.models.generateContent({
     model: "models/gemini-2.0-flash",
