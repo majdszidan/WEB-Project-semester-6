@@ -17,7 +17,7 @@ export default function CourseNav({
   return (
     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
       <div className="flex items-center space-x-4">
-        <span className="text-sm font-medium text-gray-700">Quiz:</span>
+        <span className="text-sm font-medium text-gray-700">الاختبار:</span>
         <div className="flex space-x-2">
           {quizzes.map((_, index) => (
             <button
