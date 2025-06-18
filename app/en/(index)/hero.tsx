@@ -35,11 +35,11 @@ export default function HeroSection() {
 
           {/* Image Content */}
           <div className="hero-image-container mt-12 lg:mt-0 lg:w-1/2">
-            <div className="hero-image-wrapper pl-4 -mr-16 sm:pl-6 md:-mr-16 lg:px-0 lg:m-0 lg:relative lg:h-full">
+            <div className="hero-image-wrapper  lg:px-0 lg:m-0 lg:relative lg:h-full">
               <Image
                 src={AiLearn}
                 alt="EduMate Dashboard Screenshot"
-                className="hero-image"
+                className="hero-image m-auto"
               />
             </div>
           </div>

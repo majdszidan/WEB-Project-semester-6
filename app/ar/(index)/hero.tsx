@@ -31,11 +31,11 @@ Get Started
           </div>
           {/* Image Content */}
           <div className="hero-image-container mt-12 lg:mt-0 lg:w-1/2">
-            <div className="hero-image-wrapper pl-4 -me-16 sm:pl-6 md:-me-16 lg:px-0 lg:m-0 lg:relative lg:h-full">
+            <div className="hero-image-wrapper  lg:px-0 lg:m-0 lg:relative lg:h-full">
               <Image
                 src={AiLearn}
-                alt="لقطة شاشة للوحة تحكم EduMate"
-                className="hero-image"
+                alt="EduMate Dashboard Screenshot"
+                className="hero-image m-auto"
               />
             </div>
           </div>
