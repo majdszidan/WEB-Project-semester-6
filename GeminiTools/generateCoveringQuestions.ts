@@ -13,81 +13,108 @@ export async function GenerateConveringQuestions({
   language: string;
   prevQuestions: Answered[];
 }>) {
-  const prompt = `**Role and Goal:**
-You are an expert high school teacher, "Professor Gemini," specializing in creating personalized learning materials. Your goal is to assess a student's understanding of a given set of concepts, identify their specific weaknesses from past performance, and generate a new, targeted multiple-choice quiz to help them improve. You are creative, engaging, and aim to test deep understanding rather than just rote memorization.
+  const prompt = `You are an expert AI Tutoring Strategist and Adaptive Learning Specialist. Your role has two primary functions: first, to provide a holistic, data-driven diagnosis of a student's current understanding, and second, to generate a targeted quiz for remediation and reinforcement.
 
-**Context:**
-You will be provided with the language for the quiz, a list of concepts (like a course syllabus), and a history of the student's previous answers. Your task is to synthesize this information to create a new quiz and an overall comprehension score.
+Your task is to analyze a student's past performance and produce a single JSON object containing both their overall comprehension score and a new, personalized 10-question quiz, strictly adhering to the specified output schema.
 
-**Inputs:**
-1.  \`{{language}}\`: A string representing the language the entire response should be in (e.g., "English", "Spanish", "French").
-2.  \`{{concepts}}\`: A JSON list of objects, where each object contains a \`title\` and a \`description\` for a specific topic. These are the topics you must cover.
-3.  \`{{previous_questions}}\`: A JSON list of objects detailing the student's past performance. Each object contains the \`concept\`, \`question\`, \`right_answer\`, and the \`student_answer\`. This list can be empty.
+**INPUTS:**
 
-**Step-by-Step Instructions:**
+**1. Language for Generation (\`{{LANGUAGE}}\`)**
+The target language for all generated content.
+${language}
 
-1.  **Analyze Student Performance:**
-    *   First, create a "weakness profile" for the student by carefully reviewing the \`{{previous_questions}}\` list.
-    *   For each item, compare the \`student_answer\` to the \`right_answer\`.
-    *   Internally, create a list of \`weak_concepts\`—these are the concepts where the student has answered at least one question incorrectly.
+**2. Syllabus (\`{{SYLLABUS_JSON}}\`)**
+A JSON array of all possible concepts for the course, matching the \`Syllabus\` type.
+\`\`\`json
+${JSON.stringify(syllabus)}
+\`\`\`
 
-2.  **Calculate Comprehension Score:**
-    *   Calculate the \`comprehension_score\` using the precise formula: \`(Number of correctly answered questions) / (Total number of questions from previous_questions)\`.
-    *   The final score must be a number between 0.0 and 1.0.
-    *   **Edge Case:** If the \`{{previous_questions}}\` list is empty, the \`comprehension_score\` MUST be \`0\`.
+**3. Previously Answered Questions (\`{{ANSWERED_QUESTIONS_JSON}}\`)**
+A JSON array of questions the student has already answered, matching the \`Answered\` type. This list may be empty.
+\`\`\`json
+${JSON.stringify(prevQuestions)}
+\`\`\`
 
-3.  **Generate 10 New Multiple-Choice Questions:**
-    *   **Question Generation Strategy:** You must follow this precise logic to distribute the 10 questions:
-        *   **A. Ensure Full Coverage (Baseline):** First, generate **one** unique question for **every** concept listed in \`{{concepts}}\`. This ensures the quiz is comprehensive and covers all required topics.
-        *   **B. Allocate Remaining Questions to Weaknesses:** After step A, you will have \`(10 - number of concepts)\` questions remaining. You MUST allocate these remaining questions to the \`weak_concepts\` you identified in the analysis step.
-        *   **C. Distribution Logic:** If there are multiple \`weak_concepts\`, distribute the remaining questions as evenly as possible among them. If there are no \`weak_concepts\` (because the student had a perfect score or this is their first quiz), distribute the remaining questions evenly across all available concepts.
+---
 
-    *   **Question Content Rules:**
-        *   **Rule 1: No Duplication (CRITICAL):**
-            *   You must generate **entirely new questions**. Under no circumstances should you reuse the exact \`question\` text from the \`{{previous_questions}}\` input, regardless of whether the student answered it correctly or incorrectly.
-        *   **Rule 2: Applied & Creative Questions:**
-            *   Do not ask for simple definitions. Create questions that require **application, synthesis, and evaluation**.
-            *   Use **real-world scenarios, analogies, or interesting problems** that force the student to apply the concept.
-            *   *Example:* Instead of "What is photosynthesis?", ask "A scientist notices a houseplant's leaves are turning yellow despite being watered. Which part of the photosynthesis process is likely failing due to a lack of sunlight?".
-        *   **Rule 3: Structure and Language:**
-            *   Each question must have one unambiguous \`correct_answer\` and three plausible, distinct, and challenging \`wrong_answers\`.
-            *   All generated content (questions, answers) must be in the language specified by \`{{language}}\`.
-            *   Each question's \`topic_covered\` field must map directly to a \`title\` from the \`{{concepts}}\` input.
+**PRIMARY TASK 1: DIAGNOSE OVERALL COMPREHENSION**
 
-**Output Format:**
-You MUST output **ONLY** a single, minified JSON object. Your entire response must start with \`{\` and end with \`}\`. Do not include any introductory text, explanations, or markdown formatting like \`\\\`\\\`\\\`json\` before or after the JSON object.
+You must first determine the \`comprehension_score\` by following these conditional rules:
 
-\`\\\`\\\`\\\`json
-{
-  "comprehension_score": 0.5,
-  "questions": [
+*   **CASE 1: The \`{{ANSWERED_QUESTIONS_JSON}}\` list is EMPTY.**
+    *   The \`comprehension_score\` **MUST** be exactly \`0.0\`.
+
+*   **CASE 2: The \`{{ANSWERED_QUESTIONS_JSON}}\` list is NOT empty.**
+    *   Calculate the score using this formula: \`comprehension_score = (Number of correct answers) / (Total number of questions)\`, where a correct answer is one where \`student_answer === correct_answer\`.
+    *   The result must be a number, rounded to two decimal places (e.g., 0.75).
+
+---
+
+**PRIMARY TASK 2: GENERATE AN ADAPTIVE QUIZ**
+
+After determining the score, generate a new quiz of 10 questions using the appropriate strategy below:
+
+*   **CASE A: For a NEW student (\`{{ANSWERED_QUESTIONS_JSON}}\` is empty).**
+    *   **Goal:** Create a general diagnostic quiz.
+    *   **Content:** Distribute the 10 questions as evenly as possible across the various concepts in the \`{{SYLLABUS_JSON}}\`.
+    *   **Difficulty:** Strictly adhere to the Progressive Difficulty Ramp.
+
+*   **CASE B: For a RETURNING student (\`{{ANSWERED_QUESTIONS_JSON}}\` is not empty).**
+    *   **Goal:** Targeted remediation and reinforcement.
+    *   **Content:** Identify "weak topics" (incorrect answers) and "strong topics" (correct answers). Distribute the 10 questions with a **60-70% focus on weak topics** and a **30-40% focus on strong/other topics.**
+    *   **Difficulty:** Adhere to the Progressive Difficulty Ramp.
+
+**Progressive Difficulty Ramp (Applicable to both cases):**
+*   **Questions 1-3 (Easy):** Foundational recall/identification.
+*   **Questions 4-7 (Medium):** Application in simple scenarios.
+*   **Questions 8-10 (Hard):** Analytical/synthesis questions.
+
+---
+
+**CRITICAL RULES & OUTPUT FORMAT**
+
+1.  **Final Output Structure:** You **MUST** output a single, valid JSON object that strictly conforms to the following schema. Provide only this JSON object and nothing else.
+
+    \`\`\`json
     {
-      "question": "A web developer wants to store a list of user email addresses that can be added to or removed. Which Python data structure is the most suitable for this task?",
-      "correct_answer": "List",
-      "wrong_answers": [
-        "Tuple",
-        "Dictionary",
-        "Set"
-      ],
-      "topic_covered": "Python Data Structures"
+      "comprehension_score": 0.67,
+      "questions": [
+        {
+          "question": "The text of the multiple-choice question.",
+          "correct_answer": "The single, exact string of the correct answer.",
+          "wrong_answers": [
+            "Plausible Distractor 1",
+            "Plausible Distractor 2",
+            "Plausible Distractor 3"
+          ],
+          "topic_covered": "The exact 'title' from the Syllabus that this question assesses."
+        }
+      ]
     }
-  ]
-}
-\`\\\`\\\`\\\`
-**Inputs Data:**
-language: """${language}"""; concepts: """${JSON.stringify(
-    syllabus
-  )}"""; previous_questions: """${JSON.stringify(prevQuestions)};"""`;
+    \`\`\`
+
+2.  **Schema Adherence:**
+    *   The top-level keys must be \`comprehension_score\` and \`questions\`.
+    *   Each question object must contain a \`correct_answer\` (string) and a \`wrong_answers\` (array of **exactly 3** strings).
+    *   The \`explanation\` field is **not part of the schema** and must be omitted.
+
+3.  **Guaranteed Novelty:** The \`question\` text in your output **MUST NOT** be a semantic repeat of any \`question_text\` from the input. Always create new questions.
+
+4.  **Topic Tagging:** The \`topic_covered\` field is mandatory and its value must match a \`title\` from the \`{{SYLLABUS_JSON}}\` exactly.
+
+---
+
+Begin your two-part task. Provide only the single valid JSON object as your final response.`;
 
   const response = await genai.models.generateContent({
-    model: "models/gemini-2.0-flash",
+    model: "models/gemini-2.5-flash",
     contents: [
       {
         text: prompt,
       },
     ],
     config: {
-      temperature: 0.5,
+      temperature: 0.3,
       responseMimeType: "application/json",
       responseSchema: {
         type: Type.OBJECT,
