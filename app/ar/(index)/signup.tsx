@@ -1,7 +1,8 @@
 import { auth } from "@/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { CheckCircle2Icon, InfoIcon, XIcon } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
 export default function SignUpModal({
   isOpen,
   setIsOpen,
@@ -11,6 +12,11 @@ export default function SignUpModal({
 }) {
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<boolean>(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    (document.getElementById("signup-form") as HTMLFormElement).reset();
+  }, [isOpen]);
   const register = (form: FormEvent<HTMLFormElement>) => {
     form.preventDefault();
     setSuccess(false);
@@ -52,6 +58,8 @@ export default function SignUpModal({
           await updateProfile(userCredential.user, {
             displayName: fName + " " + lName,
           });
+          setSuccess(true);
+          router.replace("/home");
         })
         .catch((error) => {
           setError(error.message);
@@ -118,7 +126,9 @@ export default function SignUpModal({
                 className="text-green-600 w-full bg-green-300 p-2 rounded-md my-2"
               >
                 <CheckCircle2Icon className="inline me-2" />
-                <p className="inline">تم إنشاء الحساب بنجاح!</p>
+                <p className="inline">
+                  تم إنشاء الحساب بنجاح, جاري تسجيل الدخول...!
+                </p>
               </div>
             )}
 

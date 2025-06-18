@@ -36,7 +36,7 @@ export default function NavBar() {
 
   return (
     <>
-      <nav className="bg-white shadow fixed w-full z-50">
+      <nav className="bg-white top-0 start-0 shadow fixed w-full z-50">
         <div className="max-w-6xl px-4 mx-auto">
           <div className="flex justify-between h-16">
             <div className="flex">
@@ -74,7 +74,8 @@ export default function NavBar() {
                       <Link
                         key={language.code}
                         href={"#"}
-                        onClick={async () => {
+                        onClick={async (e) => {
+                          e.preventDefault();
                           setLanguageIsOpen(false);
                           document.cookie = `lang=${language.code}`;
                           router.refresh();

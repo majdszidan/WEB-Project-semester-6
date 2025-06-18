@@ -19,7 +19,9 @@ export default function AddCourseButton() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [syllabus, setSyllabus] = useState<CourseSyllabus | null>(null);
-  const [selectedTopics, setSelectedTopics] = useState<Set<Syllabus>>(new Set());
+  const [selectedTopics, setSelectedTopics] = useState<Set<Syllabus>>(
+    new Set()
+  );
   const [showSyllabusModal, setShowSyllabusModal] = useState(false);
 
   useEffect(() => {
@@ -219,8 +221,8 @@ export default function AddCourseButton() {
 
                       setShowSyllabusModal(false);
                       setIsOpen(false);
-                    } catch (err: any) {
-                      alert(err.message);
+                    } catch (err) {
+                      alert((err as Error).message);
                     }
                   }}
                   className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"

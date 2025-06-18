@@ -5,12 +5,18 @@ import {
   Timestamp,
   doc,
   getDoc,
+  updateDoc,
+  query,
+  orderBy,
 } from "firebase/firestore";
 import { Course } from "./CreateCourse";
 
 export function GetCourses(onData: (courses: Course[]) => void) {
   const unsub = onSnapshot(
-    collection(firestore, "users/" + auth.currentUser?.uid + "/courses"),
+    query(
+      collection(firestore, "users/" + auth.currentUser?.uid + "/courses"),
+      orderBy("lastAccessed", "desc")
+    ),
     (snapshot) => {
       const courses = snapshot.docs.map((doc) => {
         const data = doc.data();
@@ -34,5 +40,7 @@ export async function GetCourse(courseId: string) {
   const docSnap = await getDoc(
     doc(firestore, "users/" + auth.currentUser?.uid + "/courses/" + courseId)
   );
+  if (!docSnap.exists()) return null;
+  await updateDoc(docSnap.ref, { lastAccessed: Timestamp.now() });
   return docSnap.data() as Course;
 }

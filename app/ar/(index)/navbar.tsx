@@ -38,6 +38,12 @@ export default function NavBar() {
                   <span id="selected-language">العربية</span>
                   <ChevronDown className="ms-1 text-xs"></ChevronDown>
                 </button>
+                {languageIsOpen && (
+                  <div
+                    className="w-screen h-screen top-0 start-0  fixed bg-black opacity-0"
+                    onClick={() => setLanguageIsOpen(false)}
+                  ></div>
+                )}
                 <dialog
                   open={languageIsOpen}
                   id="language-dropdown"
@@ -50,7 +56,8 @@ export default function NavBar() {
                       <Link
                         key={language.code}
                         href={"#"}
-                        onClick={async () => {
+                        onClick={async (e) => {
+                          e.preventDefault();
                           setLanguageIsOpen(false);
                           document.cookie = `lang=${language.code}`;
                           router.refresh();
