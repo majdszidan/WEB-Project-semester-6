@@ -1,7 +1,7 @@
 "use server";
 
-import { Chat } from "@google/genai";
 import { genai } from "./genai";
+import { Syllabus } from "./getSyllabus";
 
 const modelConfig = {
   model: "models/gemini-2.0-flash",
@@ -10,19 +10,23 @@ const modelConfig = {
 
 async function answerQuestion(
   language: string,
-  topic: string,
+  topic: Syllabus[],
   question: string,
   context?: string
 ): Promise<string> {
   const ai = genai.chats.create(modelConfig);
 
   const contextMessage = context
-    ? `Here is some context related to the topic "${topic}" to help answer the question: ${context}`
+    ? `Here is some context related to the topics: \`\`\`json\n${JSON.stringify(
+        topic
+      )}\`\`\` to help answer the question: ${context}`
     : "";
 
   const response = await ai.sendMessage({
     message: `
-You are a smart and helpful course assistant. A student is asking a question about "${topic}". Your goal is to provide a clear and helpful explanation or answer.
+You are a smart and helpful course assistant. A student is asking a question about topics: \`\`\`json\n${JSON.stringify(
+      topic
+    )}\`\`\`. Your goal is to provide a clear and helpful explanation or answer.
 
 **Language:** Your response MUST be in ${language}. Avoid using other languages.
 
@@ -38,13 +42,17 @@ ${question}
 - Keep your tone supportive and encouraging.
 - If you don't know the answer, say so politely and suggest where they might find more information.
 - If the question is unclear, ask for clarification.
-- If the question is about subjects outside of "${topic}", politely inform the student that you can only answer questions related to "${topic}".
+- If the question is about subjects outside of topics: \`\`\`json\n${JSON.stringify(
+      topic
+    )}\`\`\`, politely inform the student that you can only answer questions related to "${topic}".
 
 Please respond ONLY with the answer in ${language}.
     `,
   });
 
-  return response.text?.trim() ?? "מצטער, לא הצלחתי להבין את השאלה. נסה לנסח מחדש.";
+  return (
+    response.text?.trim() ?? "מצטער, לא הצלחתי להבין את השאלה. נסה לנסח מחדש."
+  );
 }
 
 async function generateFollowUpSuggestions(

@@ -33,7 +33,7 @@ export default function CourseChatbot({ course }: { course: Course }) {
     )}\`\`\`. Use ${
       course.language
     } language. Keep it simple, encouraging, and supportive.`;
-    answerQuestion(course.language, course.name, welcomePrompt)
+    answerQuestion(course.language, Array.from(course.topics), welcomePrompt)
       .then((welcomeMessage) => {
         setMessages([
           {
@@ -80,7 +80,7 @@ export default function CourseChatbot({ course }: { course: Course }) {
     try {
       const response = await answerQuestion(
         course.language,
-        course.name,
+        Array.from(course.topics),
         userMessage.content
       );
 
