@@ -2,9 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Course } from "@/FirebaseTools/CreateCourse";
-import { Syllabus } from "@/GeminiTools/getSyllabus";
-// Import the async functions instead of the class
-import { answerQuestion, generateFollowUpSuggestions } from "@/GeminiTools/GenerateAnswers";
+import { answerQuestion } from "@/GeminiTools/GenerateAnswers";
+import { SendHorizonalIcon } from "lucide-react";
 
 interface Message {
   id: string;
@@ -13,12 +12,7 @@ interface Message {
   timestamp: Date;
 }
 
-interface CourseChatbotProps {
-  course: Course;
-  courseId: string;
-}
-
-export default function CourseChatbot({ course, courseId }: CourseChatbotProps) {
+export default function CourseChatbot({ course }: { course: Course }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -32,23 +26,25 @@ export default function CourseChatbot({ course, courseId }: CourseChatbotProps) 
 
   // Generate the welcome message once on mount
   useEffect(() => {
-    async function generateWelcomeMessage() {
-      setLoadingWelcome(true);
-      try {
-        // Compose a prompt to get a welcome message in the course language
-        const welcomePrompt = `You are a friendly and helpful course assistant. Write a warm welcome message to a student starting the course "${course.name}". Use ${course.language} language. Keep it simple, encouraging, and supportive.`;
-
-        const welcomeMessage = await answerQuestion(course.language, course.name, welcomePrompt);
-
+    setLoadingWelcome(true);
+    if (!course) return;
+    const welcomePrompt = `You are a friendly and helpful course assistant. Write a short one sentence warm welcome message to a student studing these topics: \`\`\`json\n${JSON.stringify(
+      course.topics
+    )}\`\`\`. Use ${
+      course.language
+    } language. Keep it simple, encouraging, and supportive.`;
+    answerQuestion(course.language, Array.from(course.topics), welcomePrompt)
+      .then((welcomeMessage) => {
         setMessages([
           {
             id: "welcome",
-            content: welcomeMessage ,
+            content: welcomeMessage,
             isUser: false,
             timestamp: new Date(),
           },
         ]);
-      } catch (error) {
+      })
+      .catch(() => {
         setMessages([
           {
             id: "welcome",
@@ -57,13 +53,11 @@ export default function CourseChatbot({ course, courseId }: CourseChatbotProps) 
             timestamp: new Date(),
           },
         ]);
-      } finally {
+      })
+      .finally(() => {
         setLoadingWelcome(false);
-      }
-    }
-
-    generateWelcomeMessage();
-  }, [course.language, course.name]);
+      });
+  }, [course]);
 
   useEffect(() => {
     scrollToBottom();
@@ -84,8 +78,11 @@ export default function CourseChatbot({ course, courseId }: CourseChatbotProps) 
     setIsLoading(true);
 
     try {
-      // Call the async function directly with language and topic
-      const response = await answerQuestion(course.language, course.name, userMessage.content);
+      const response = await answerQuestion(
+        course.language,
+        Array.from(course.topics),
+        userMessage.content
+      );
 
       const botMessage: Message = {
         id: `bot-${Date.now()}`,
@@ -95,12 +92,7 @@ export default function CourseChatbot({ course, courseId }: CourseChatbotProps) 
       };
 
       setMessages((prev) => [...prev, botMessage]);
-
-      // Optionally you can generate follow-up suggestions here and do something with them
-      // const followUps = await generateFollowUpSuggestions(course.language, course.name, userMessage.content);
-      // console.log(followUps);
-
-    } catch (error) {
+    } catch {
       const errorMessage: Message = {
         id: `error-${Date.now()}`,
         content: "Sorry, I encountered an error. Please try again.",
@@ -126,12 +118,17 @@ export default function CourseChatbot({ course, courseId }: CourseChatbotProps) 
   };
 
   return (
-    <div className="max-w-4xl mx-auto h-[calc(100vh-200px)] flex flex-col bg-white border rounded-lg shadow-sm">
-      <div className="flex items-center justify-between p-4 border-b bg-blue-50">
+    <div className="max-w-3xl mx-auto h-[calc(100vh-200px)] flex flex-col bg-white border rounded-lg shadow-sm">
+      <div className="flex items-center justify-between p-4 border-b bg-blue-50 ">
         <div>
-          <h3 className="font-semibold text-gray-800">Course Assistant</h3>
-          <p className="text-sm text-gray-600">
-            Ask me about {course.name} topics: {getTopicsDisplay(course.topics)}
+          <h3 className="font-semibold text-gray-800 ">Course Assistant</h3>
+          <p className="text-sm text-gray-600 max-w-2xl text-nowrap truncate text-ellipsis">
+            Ask me about {course.name}
+            <br />
+            topics:{" "}
+            {Array.from(course.topics)
+              .map((topic) => topic.title)
+              .join(", ")}
           </p>
         </div>
         <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
@@ -147,7 +144,9 @@ export default function CourseChatbot({ course, courseId }: CourseChatbotProps) 
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex ${message.isUser ? "justify-end" : "justify-start"}`}
+            className={`flex ${
+              message.isUser ? "justify-end" : "justify-start"
+            }`}
           >
             <div
               className={`max-w-[80%] p-3 rounded-lg ${
@@ -196,8 +195,8 @@ export default function CourseChatbot({ course, courseId }: CourseChatbotProps) 
             type="text"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Ask a question about the course..."
+            onKeyDown={handleKeyPress}
+            placeholder="שאל שאלות על הקורס..."
             className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             disabled={isLoading || loadingWelcome}
           />
@@ -206,28 +205,10 @@ export default function CourseChatbot({ course, courseId }: CourseChatbotProps) 
             disabled={!inputMessage.trim() || isLoading || loadingWelcome}
             className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            Send
+            <SendHorizonalIcon className="-scale-[-1]" />
           </button>
         </div>
       </div>
     </div>
   );
-}
-
-function getTopicsDisplay(topics: Set<Syllabus> | Syllabus[]): string {
-  const topicsArray = Array.isArray(topics) ? topics : Array.from(topics);
-  const displayTopics = topicsArray.slice(0, 3);
-  const topicNames = displayTopics.map((topic) => getSyllabusDisplayName(topic));
-  return topicNames.join(", ") + (topicsArray.length > 3 ? "..." : "");
-}
-
-function getSyllabusDisplayName(topic: Syllabus): string {
-  if (typeof topic === "string") return topic;
-  const possibleNames = ["title", "name", "topic", "subject", "text", "content", "description"];
-  for (const prop of possibleNames) {
-    if (prop in topic && typeof (topic as any)[prop] === "string") return (topic as any)[prop];
-  }
-  const values = Object.values(topic).filter((val) => typeof val === "string");
-  if (values.length > 0) return values[0];
-  return "Topic";
 }
