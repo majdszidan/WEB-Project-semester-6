@@ -1,5 +1,5 @@
 import { DocumentReference } from "firebase/firestore";
-import { UndoDotIcon, SendHorizonalIcon, RedoDotIcon } from "lucide-react";
+import { SendHorizonalIcon } from "lucide-react";
 
 export default function CourseNav({
   quizzes,
@@ -15,37 +15,32 @@ export default function CourseNav({
   submit: () => void;
 }) {
   return (
-    <div className="flex justify-between flex-row">
+    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+      <div className="flex items-center space-x-4">
+        <span className="text-sm font-medium text-gray-700">الاختبار:</span>
+        <div className="flex space-x-2">
+          {quizzes.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setQuiz(index)}
+              className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                quiz === index
+                  ? "bg-blue-500 text-white"
+                  : "bg-white text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              {quizzes.length - index}
+            </button>
+          ))}
+        </div>
+      </div>
       <button
-        className="flex flex-row gap-3 bg-gray-500 text-white py-1 px-2 rounded-lg disabled:bg-gray-300"
-        type="button"
-        disabled={quizzes.length - quiz == 1}
-        onClick={() => setQuiz(quiz + 1)}
+        onClick={submit}
+        disabled={!canSubmit || quiz != length}
+        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
-        <RedoDotIcon />
-        السابق
+        <SendHorizonalIcon className="-scale-[-1]" />
       </button>
-      {quizzes.length - quiz}/{quizzes.length}
-      {quiz == 0 ? (
-        <button
-          className="flex flex-row gap-3 bg-blue-600 text-white py-1 px-2 rounded-lg disabled:bg-blue-300"
-          type="button"
-          disabled={!canSubmit}
-          onClick={submit}
-        >
-          تسليم
-          <SendHorizonalIcon className="scale-x-[-1]" />
-        </button>
-      ) : (
-        <button
-          className="flex flex-row gap-3 bg-gray-500 text-white py-1 px-2 rounded-lg "
-          type="button"
-          onClick={() => setQuiz(quiz - 1)}
-        >
-          التالي
-          <UndoDotIcon />
-        </button>
-      )}
     </div>
   );
 }
