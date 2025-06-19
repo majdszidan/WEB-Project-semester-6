@@ -45,7 +45,7 @@ export default function CoursesGrid() {
             <span className="text-blue-500"> (לחץ על ה + להייצר)</span>
           </div>
           <Image
-            className="w-1/2 h-1/3 pl-10 absolute bottom-20 right-10"
+            className="w-1/2 h-1/3 pl-10 fixed bottom-20 right-10"
             src={arrow}
             alt=""
           />
