@@ -28,12 +28,19 @@ if (app.name && typeof window !== "undefined") {
 export const auth = getAuth(app);
 if (typeof document !== "undefined") {
   auth.onAuthStateChanged((user) => {
-    if (!user) {
+    if (user === null) {
       document.cookie =
         "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    } else {
+      if (typeof window !== "undefined" && window.location.pathname !== "/")
+        window.location.pathname = "/";
+    } else if (user) {
       user.getIdToken(true).then((token) => {
         document.cookie = "token=" + token + ";";
+        if (
+          typeof window !== "undefined" &&
+          window.location.pathname !== "/home"
+        )
+          window.location.pathname = "/home";
       });
     }
   });
