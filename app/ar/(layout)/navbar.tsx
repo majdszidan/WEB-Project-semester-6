@@ -16,10 +16,7 @@ export default function NavBar() {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (!user) {
-        document.cookie = "token=;";
-        router.replace("/");
-      } else {
+      if (user) {
         setUsername(user.displayName ?? user.email?.split("@")[0] ?? "");
       }
     });

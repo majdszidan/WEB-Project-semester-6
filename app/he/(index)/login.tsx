@@ -5,7 +5,6 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { InfoIcon, XIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 export default function LoginModal({
   isOpen,
@@ -16,7 +15,6 @@ export default function LoginModal({
 }) {
   const [error, setError] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const router = useRouter();
   const login = (form: FormEvent<HTMLFormElement>) => {
     form.preventDefault();
     setError("");
@@ -31,11 +29,7 @@ export default function LoginModal({
       auth,
       email?.toString() ?? "",
       password?.toString() ?? ""
-    )
-      .then(() => {
-        setTimeout(() => router.replace("/home"), 500);
-      })
-      .catch((e) => setError(e.message));
+    ).catch((e) => setError(e.message));
   };
   return (
     <dialog
