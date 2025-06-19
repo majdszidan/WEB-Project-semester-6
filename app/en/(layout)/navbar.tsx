@@ -76,6 +76,19 @@ export default function NavBar() {
           </Link>
 
           <div className="flex items-center sm:hidden">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-md transition"
+              style={{
+                backgroundColor: isDark
+                  ? "var(--card-background)"
+                  : "var(--secondary-background)",
+              }}
+              title="Toggle Dark Mode"
+            >
+              {isDark ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+
               <MenuIcon
                 onClick={() => setIsPhoneMenuOpen(!isPhoneMenuOpen)}
                 className="text-blue-500"
@@ -148,7 +161,7 @@ export default function NavBar() {
             </div>
 
           {/* Right side */}
-          <div className="flex items-center space-x-4">
+          <div className="hidden sm:flex items-center space-x-4">
             {/* Dark mode toggle */}
             <button
               onClick={toggleTheme}
