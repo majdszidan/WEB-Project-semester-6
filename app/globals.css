@@ -1,10 +1,5 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -12,17 +7,83 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #275287;        /* white background */
+  --foreground: #111111;        /* dark text */
+
+  --navbar-background: #ffffff;
+  --navbar-foreground: #171717;
+  
+  --danger-color: #da0909;
+  --hover-danger-bg: #7f1d1d;
+
+  --card-background: #f9fafb;
+  --card-foreground: #111111;
+  --border-color: #d1d5db;
+  --primary-color: #1a65c0;
+  --secondary-background: #f9fafb;
+
+  --answer-bg-default: #ffffff;
+  --answer-bg-correct: #0e803a;
+  --answer-bg-wrong: #d41111;
+  --answer-text-correct: #b7c9c4;
+  --answer-text-wrong: #fecaca;
+
+  --math-bg: #bfdbfe;       /* blue-100 */
+  --science-bg: #bbf7d0;    /* green-100 */
+  --languages-bg: #fef3c7;  /* yellow-100 */
+  --history-bg: #fecaca;    /* red-100 */
+  --cs-bg: #e9d5ff;         /* purple-100 */
+  --arts-bg: #fbcfe8;       /* pink-100 */
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+
+  --navbar-background: #1f2937;
+  --navbar-foreground: #ffffff;
+
+  --danger-color: #da0909;
+  --hover-danger-bg: #7f1d1d;
+  
+  
+  --card-background: #1f2937;
+  --card-foreground: #ededed;
+  --border-color: #374151;
+  --primary-color: #1d6bca;
+  --secondary-background: #111827;
+
+  --answer-bg-default: #374151;
+  --answer-bg-correct: #0e803a;
+  --answer-bg-wrong: #d41111;
+  --answer-text-correct: #bbf7d0;
+  --answer-text-wrong: #fecaca;
+
+  --math-bg: #1e40af;       /* darker blue */
+  --science-bg: #166534;    /* darker green */
+  --languages-bg: #854d0e;  /* darker yellow/brown */
+  --history-bg: #991b1b;    /* darker red */
+  --cs-bg: #6b21a8;         /* darker purple */
+  --arts-bg: #9d174d;       /* darker pink/maroon */
+}
+
+.lang-selector-hover {
+  transition: background-color 0.2s, color 0.2s;
+  background-color: var(--card-background);
+  color: var(--foreground);
+}
+
+.lang-selector-hover:hover {
+  background-color: var(--background, #e5e7eb);
+  color: var(--foreground, #111111);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans, Arial, Helvetica, sans-serif);
+  transition: background-color 0.3s, color 0.3s;
 }
 
 @layer utilities {

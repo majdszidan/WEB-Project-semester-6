@@ -39,6 +39,7 @@ export default function CoursePage() {
       prevQuestions: await GetPreviousAnswers(courseId),
     }).then((q) => {
       SaveQuestions(courseId, q);
+      setLoading(false);
     });
   }
 
@@ -104,7 +105,6 @@ export default function CoursePage() {
 
   const renderQuizContent = () => (
     <div className="max-w-3xl mx-auto space-y-6">
-      {/* Quiz Navigation */}
       <CourseNav
         quizzes={quizzes}
         setQuiz={setQuiz}
@@ -120,11 +120,17 @@ export default function CoursePage() {
         return (
           <div
             key={id}
-            className="border p-4 rounded-lg shadow space-y-3 bg-gray-50"
+            className="border p-4 rounded-lg shadow space-y-3 transition-colors"
+            style={{
+              backgroundColor: "var(--card-background)",
+              color: "var(--card-foreground)",
+              borderColor: "var(--border-color)",
+            }}
           >
-            <h2 dir="auto" className="text-lg font-semibold">
+            <h2 className="text-lg font-semibold" dir="auto">
               {q.question}
             </h2>
+
             {allChoices.map((choice) => {
               const isSelected = answers[id] === choice;
               const isCorrect = choice === q.correct_answer;
@@ -135,16 +141,24 @@ export default function CoursePage() {
                   dir="auto"
                   disabled={answers[id] !== undefined}
                   onClick={() => handleAnswer(id, choice)}
-                  className={`w-full text-start  px-4 py-2 rounded border transition  ${
-                    isSelected
+                  className="w-full text-start px-4 py-2 rounded border transition-colors"
+                  style={{
+                    backgroundColor: isSelected
                       ? isCorrect
-                        ? "bg-green-100 border-green-500 text-green-800"
-                        : "bg-red-100 border-red-500 text-red-800"
-                      : "bg-white border-gray-300 hover:bg-gray-100"
-                  }`}
+                        ? "var(--answer-bg-correct)"
+                        : "var(--answer-bg-wrong)"
+                      : "var(--answer-bg-default)",
+                    color: isSelected
+                      ? isCorrect
+                        ? "var(--answer-text-correct)"
+                        : "var(--answer-text-wrong)"
+                      : "var(--card-foreground)",
+                    borderColor: "var(--border-color)",
+                  }}
                 >
                   {choice}{" "}
-                  {answers[id] && (choice === q.correct_answer ? "✔️" : "❌")}
+                  {answers[id] &&
+                    (choice === q.correct_answer ? "✔️" : "❌")}
                 </button>
               );
             })}
@@ -152,7 +166,6 @@ export default function CoursePage() {
         );
       })}
 
-      {/* Bottom Quiz Navigation */}
       <CourseNav
         quizzes={quizzes}
         setQuiz={setQuiz}
@@ -168,14 +181,20 @@ export default function CoursePage() {
       {Array.from({ length: 10 }).map((_, index) => (
         <div
           key={index}
-          className="border border-gray-400 p-4 rounded-lg shadow space-y-4 bg-gray-50 animate-pulse"
+          className="border p-4 rounded-lg shadow space-y-4 animate-pulse transition-colors"
+          style={{
+            backgroundColor: "var(--card-background)",
+            borderColor: "var(--border-color)",
+          }}
         >
-          <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+          <div className="h-6 rounded w-3/4 bg-gray-300 dark:bg-gray-700"></div>
           <div className="space-y-3 pt-2">
-            <div className="h-10 bg-gray-300 rounded w-full"></div>
-            <div className="h-10 bg-gray-300 rounded w-full"></div>
-            <div className="h-10 bg-gray-300 rounded w-full"></div>
-            <div className="h-10 bg-gray-300 rounded w-full"></div>
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="h-10 rounded w-full bg-gray-300 dark:bg-gray-700"
+              ></div>
+            ))}
           </div>
         </div>
       ))}
@@ -184,44 +203,57 @@ export default function CoursePage() {
 
   return (
     course?.name && (
-      <div className="pt-15 bg-white h-screen">
-        <div className="p-6 overflow-auto h-full text-black space-y-8">
-          <h1 className="text-3xl font-bold text-center text-blue-800">
-            {course?.name}
+      <div
+        className="min-h-screen transition-colors"
+        style={{
+          backgroundColor: "var(--background)",
+          color: "var(--foreground)",
+        }}
+      >
+        <div className="p-6 space-y-8 transition-colors">
+          <h1
+            className="text-3xl font-bold text-center transition-colors"
+            style={{ color: "var(--primary-color)" }}
+          >
+            {course.name}
           </h1>
 
           {/* Tab Navigation */}
           <div className="max-w-3xl mx-auto">
-            <div className="flex border-b border-gray-200">
-              <button
-                onClick={() => setActiveTab("quiz")}
-                className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${
-                  activeTab === "quiz"
-                    ? "border-blue-500 text-blue-600 bg-blue-50"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }`}
-              >
-                Quiz
-              </button>
-              <button
-                onClick={() => setActiveTab("chatbot")}
-                className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${
-                  activeTab === "chatbot"
-                    ? "border-blue-500 text-blue-600 bg-blue-50"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }`}
-              >
-                Chatbot
-              </button>
+            <div
+              className="flex border-b transition-colors"
+              style={{ borderColor: "var(--border-color)" }}
+            >
+              {(["quiz", "chatbot"] as TabType[]).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className="px-6 py-3 font-medium text-sm border-b-2 transition-colors"
+                  style={{
+                    borderColor:
+                      activeTab === tab
+                        ? "var(--primary-color)"
+                        : "transparent",
+                    backgroundColor:
+                      activeTab === tab
+                        ? "var(--secondary-background)"
+                        : "transparent",
+                    color:
+                      activeTab === tab
+                        ? "var(--primary-color)"
+                        : "var(--card-foreground)",
+                  }}
+                >
+                  {tab === "quiz" ? "Quiz" : "Chatbot"}
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Tab Content */}
-
           <div hidden={activeTab !== "quiz"}>
             {loading ? renderLoadingSkeleton() : renderQuizContent()}
           </div>
-
           <div hidden={activeTab !== "chatbot"}>
             <CourseChatbot course={course} />
           </div>
