@@ -36,10 +36,7 @@ if (typeof document !== "undefined") {
     } else if (user) {
       user.getIdToken(true).then((token) => {
         document.cookie = "token=" + token + ";";
-        if (
-          typeof window !== "undefined" &&
-          window.location.pathname !== "/home"
-        )
+        if (typeof window !== "undefined" && window.location.pathname === "/")
           window.location.pathname = "/home";
       });
     }
