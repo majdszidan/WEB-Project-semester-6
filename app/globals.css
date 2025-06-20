@@ -8,13 +8,13 @@
 }
 
 :root {
-  --background: #275287;        /* white background */
-  --foreground: #111111;        /* dark text */
-  --title-color:#ffffff;
+  --background: #275287; /* white background */
+  --foreground: #111111; /* dark text */
+  --title-color: #ffffff;
 
   --navbar-background: #ffffff;
   --navbar-foreground: #171717;
-  
+
   --danger-color: #da0909;
   --hover-danger-bg: #7f1d1d;
 
@@ -30,16 +30,16 @@
   --answer-text-correct: #b7c9c4;
   --answer-text-wrong: #fecaca;
 
-  --math-bg: #bfdbfe;       /* blue-100 */
-  --science-bg: #bbf7d0;    /* green-100 */
-  --languages-bg: #fef3c7;  /* yellow-100 */
-  --history-bg: #fecaca;    /* red-100 */
-  --cs-bg: #e9d5ff;         /* purple-100 */
-  --arts-bg: #fbcfe8;       /* pink-100 */
+  --math-bg: #bfdbfe; /* blue-100 */
+  --science-bg: #bbf7d0; /* green-100 */
+  --languages-bg: #fef3c7; /* yellow-100 */
+  --history-bg: #fecaca; /* red-100 */
+  --cs-bg: #e9d5ff; /* purple-100 */
+  --arts-bg: #fbcfe8; /* pink-100 */
 }
 
 .dark {
-  --background: #0a0a0a;
+  --background: #2b2b3b;
   --foreground: #ededed;
 
   --navbar-background: #1f2937;
@@ -47,8 +47,7 @@
 
   --danger-color: #da0909;
   --hover-danger-bg: #7f1d1d;
-  
-  
+
   --card-background: #1f2937;
   --card-foreground: #ededed;
   --border-color: #374151;
@@ -61,12 +60,12 @@
   --answer-text-correct: #bbf7d0;
   --answer-text-wrong: #fecaca;
 
-  --math-bg: #1e40af;       /* darker blue */
-  --science-bg: #166534;    /* darker green */
-  --languages-bg: #854d0e;  /* darker yellow/brown */
-  --history-bg: #991b1b;    /* darker red */
-  --cs-bg: #6b21a8;         /* darker purple */
-  --arts-bg: #9d174d;       /* darker pink/maroon */
+  --math-bg: #1e40af; /* darker blue */
+  --science-bg: #166534; /* darker green */
+  --languages-bg: #854d0e; /* darker yellow/brown */
+  --history-bg: #991b1b; /* darker red */
+  --cs-bg: #6b21a8; /* darker purple */
+  --arts-bg: #9d174d; /* darker pink/maroon */
 }
 
 .lang-selector-hover {

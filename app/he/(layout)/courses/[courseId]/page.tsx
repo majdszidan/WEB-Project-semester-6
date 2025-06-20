@@ -210,10 +210,7 @@ export default function CoursePage() {
         }}
       >
         <div className="p-6 space-y-8 transition-colors">
-          <h1
-            className="text-3xl font-bold text-center transition-colors"
-            style={{ color: "var(--primary-color)" }}
-          >
+          <h1 className="text-3xl font-bold text-center transition-colors text-white">
             {course.name}
           </h1>
 
