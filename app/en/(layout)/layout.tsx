@@ -14,7 +14,7 @@ export default function HomeLayout({
       }}
     >
       <NavBar />
-      <div className="w-full flex justify-center pt-16">
+      <div className="w-full flex justify-center">
         <main className="max-w-6xl w-full">{children}</main>
       </div>
     </div>
