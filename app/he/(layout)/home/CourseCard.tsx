@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Course } from "@/FirebaseTools/CreateCourse";
 import React from "react";
-import { DynamicIcon, iconNames } from "lucide-react/dynamic";
+import { DynamicIcon, IconName, iconNames } from "lucide-react/dynamic";
 
 export default function CourseCard({
   name,
@@ -24,16 +24,17 @@ export default function CourseCard({
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-50 transition-opacity duration-300 pointer-events-none"
         style={{
-          backgroundImage: "linear-gradient(to bottom right, var(--primary-color), var(--card-background))",
+          backgroundImage:
+            "linear-gradient(to bottom right, var(--primary-color), var(--card-background))",
         }}
       />
 
       <div className="relative h-full flex justify-between flex-col z-10 space-y-4">
         <div>
           <div className="flex items-center gap-4">
-            {icon && iconNames.includes(icon.toLowerCase() as any) ? (
+            {icon && iconNames.includes(icon.toLowerCase() as IconName) ? (
               <DynamicIcon
-                name={icon.toLowerCase() as any}
+                name={icon.toLowerCase() as IconName}
                 color="var(--primary-color)"
                 className="w-12 h-12 p-2 rounded-lg"
                 style={{ backgroundColor: "var(--math-bg)" }} // fallback to math-bg or define separate icon-bg if needed
@@ -65,7 +66,11 @@ export default function CourseCard({
           </div>
 
           {description && (
-            <p dir="auto" className="text-sm" style={{ color: "var(--card-foreground)" }}>
+            <p
+              dir="auto"
+              className="text-sm"
+              style={{ color: "var(--card-foreground)" }}
+            >
               {description}
             </p>
           )}
@@ -80,14 +85,20 @@ export default function CourseCard({
               className="h-2.5 rounded-full"
               style={{
                 width: `${progress}%`,
-                backgroundImage: "linear-gradient(to right, var(--primary-color), #1e40af)",
+                backgroundImage:
+                  "linear-gradient(to right, var(--primary-color), #1e40af)",
               }}
             />
           </div>
 
-          <div className="flex justify-between text-sm" style={{ color: "var(--foreground)" }}>
+          <div
+            className="flex justify-between text-sm"
+            style={{ color: "var(--foreground)" }}
+          >
             <span>התקדמות</span>
-            <span className="font-bold text-[var(--primary-color)]">{progress}%</span>
+            <span className="font-bold text-[var(--primary-color)]">
+              {progress}%
+            </span>
           </div>
 
           <div className="pt-2">
@@ -99,7 +110,7 @@ export default function CourseCard({
                   color: "white",
                 }}
               >
-              פתח קורס
+                פתח קורס
               </button>
             </Link>
           </div>
