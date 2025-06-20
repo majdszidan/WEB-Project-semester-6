@@ -111,7 +111,9 @@ export default function NavBar() {
               </button>
 
               {/* Language Selector */}
-              <SiteLangPicker lang="Hebrew" />
+              <div className="relative">
+                <SiteLangPicker lang="Hebrew" />
+              </div>
 
               {/* Auth Buttons */}
               <button
