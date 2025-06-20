@@ -2,15 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { auth } from "@/firebase";
-import { ChevronDown, User, LogOut, Sun, Moon, MenuIcon } from "lucide-react";
+import { User, LogOut, Sun, Moon, MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { signOut } from "firebase/auth";
-import { useRouter } from "next/navigation";
-import { LanguageList, translatedPages } from "@/app/Languages";
+import SiteLangPicker from "@/app/siteLangPicker";
 
 export default function NavBar() {
-  const router = useRouter();
-  const [languageIsOpen, setLanguageIsOpen] = useState(false);
   const [username, setUsername] = useState(auth.currentUser?.email || "");
   const [isDark, setIsDark] = useState(false);
   const [isPhoneMenuOpen, setIsPhoneMenuOpen] = useState(false);
@@ -33,7 +30,7 @@ export default function NavBar() {
     }
 
     return () => unsubscribe();
-  }, [router]);
+  }, []);
 
   const toggleTheme = () => {
     const root = document.documentElement;
@@ -117,7 +114,8 @@ export default function NavBar() {
                     color: "var(--danger-color)",
                   }}
                   onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = "var(--hover-danger-bg)")
+                    (e.currentTarget.style.backgroundColor =
+                      "var(--hover-danger-bg)")
                   }
                   onMouseLeave={(e) =>
                     (e.currentTarget.style.backgroundColor = "transparent")
@@ -129,54 +127,10 @@ export default function NavBar() {
               </div>
 
               <div className="relative" id="language-dropdown-container">
-                <button
-                  type="button"
-                  id="language-dropdown-btn"
-                  className="flex items-center px-3 py-2 text-sm font-bold rounded-md lang-selector-hover"
-                  onClick={() => setLanguageIsOpen(!languageIsOpen)}
-                >
-                  <span id="selected-language">English</span>
-                  <ChevronDown className="ml-1 text-xs" />
-                </button>
-
-                {languageIsOpen && (
-                  <div
-                    className="w-screen h-screen top-0 start-0 fixed z-40"
-                    onClick={() => setLanguageIsOpen(false)}
-                  />
-                )}
-
-                <div
-                  hidden={!languageIsOpen}
-                  id="language-dropdown"
-                  className="fixed start-0 w-screen max-h-80 overflow-y-auto rounded-md shadow-lg z-50"
-                  style={{
-                    backgroundColor: "var(--card-background)",
-                    color: "var(--foreground)",
-                  }}
-                >
-                  {LanguageList.filter((language) =>
-                    translatedPages.includes(language.code)
-                  ).map((language) => (
-                    <Link
-                      key={language.code}
-                      href="#"
-                      onClick={async (e) => {
-                        e.preventDefault();
-                        setLanguageIsOpen(false);
-                        document.cookie = `lang=${language.code}`;
-                        router.refresh();
-                      }}
-                      className="block px-4 py-2 text-sm lang-selector-hover"
-                    >
-                      {language.name + " (" + language.code + ")"}
-                    </Link>
-                  ))}
-                </div>
+                <SiteLangPicker lang="English" />
               </div>
             </div>
           </div>
-
 
           {/* Right side */}
           <div className="hidden sm:flex items-center space-x-4">
@@ -191,78 +145,7 @@ export default function NavBar() {
 
             {/* Language dropdown */}
             <div className="relative">
-              <button
-                onClick={() => setLanguageIsOpen(!languageIsOpen)}
-                className="flex items-center text-sm font-bold px-3 py-2 rounded-md transition-colors"
-                style={{
-                  backgroundColor: "var(--card-background)",
-                  color: "var(--card-foreground)",
-                  cursor: "pointer",
-                }}
-                onMouseOver={(e) => {
-                  const isDark = document.documentElement.classList.contains("dark");
-                  e.currentTarget.style.backgroundColor = isDark
-                    ? "var(--secondary-background)" // dark mode hover bg
-                    : "#9ca3af"; // light mode darker gray hover bg
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = "var(--card-background)";
-                }}
-              >
-                <span>English</span>
-                <ChevronDown className="ms-1 text-xs" />
-              </button>
-
-              {languageIsOpen && (
-                <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    style={{ backgroundColor: "transparent" }}
-                    onClick={() => setLanguageIsOpen(false)}
-                  />
-                  <dialog
-                    open={languageIsOpen}
-                    className="absolute end-0 mt-2 w-48 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50"
-                    style={{
-                      backgroundColor: "var(--card-background)",
-                      color: "var(--card-foreground)",
-                    }}
-                  >
-                    {LanguageList.filter((language) =>
-                      translatedPages.includes(language.code)
-                    ).map((language) => (
-                      <Link
-                        key={language.code}
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setLanguageIsOpen(false);
-                          document.cookie = `lang=${language.code}`;
-                          router.refresh();
-                        }}
-                        className="block px-4 py-2 text-sm transition-colors"
-                        style={{
-                          color: "var(--card-foreground)",
-                          backgroundColor: "var(--card-background)",
-                          cursor: "pointer",
-                        }}
-                        onMouseOver={(e) => {
-                          // Check if dark mode active
-                          const isDark = document.documentElement.classList.contains("dark");
-                          e.currentTarget.style.backgroundColor = isDark
-                            ? "var(--secondary-background)" // existing dark mode hover color
-                            : "#9ca3af"; // light mode hover - light gray (Tailwind's gray-200)
-                        }}
-                        onMouseOut={(e) => {
-                          e.currentTarget.style.backgroundColor = "var(--card-background)";
-                        }}
-                      >
-                        {language.name} ({language.code})
-                      </Link>
-                    ))}
-                  </dialog>
-                </>
-              )}
+              <SiteLangPicker lang="English" />
             </div>
 
             {/* User + Logout */}
@@ -270,7 +153,10 @@ export default function NavBar() {
               <span className="text-sm font-bold">
                 {username.split("@")[0]}
               </span>
-              <User className="w-5 h-5" style={{ color: "var(--primary-color)" }} />
+              <User
+                className="w-5 h-5"
+                style={{ color: "var(--primary-color)" }}
+              />
               <button
                 onClick={handleLogout}
                 className="flex items-center px-3 py-2 text-sm rounded-md transition"
@@ -279,8 +165,8 @@ export default function NavBar() {
                   backgroundColor: "transparent",
                 }}
                 onMouseOver={(e) =>
-                (e.currentTarget.style.backgroundColor =
-                  "var(--hover-danger-bg, #fee2e2)")
+                  (e.currentTarget.style.backgroundColor =
+                    "var(--hover-danger-bg, #fee2e2)")
                 }
                 onMouseOut={(e) =>
                   (e.currentTarget.style.backgroundColor = "transparent")

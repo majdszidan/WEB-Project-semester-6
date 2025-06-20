@@ -3,18 +3,15 @@
 import { useState, useEffect } from "react";
 import LoginModal from "./login";
 import SignUpModal from "./signup";
-import { ChevronDown, Sun, Moon, MenuIcon } from "lucide-react";
+import { Sun, Moon, MenuIcon } from "lucide-react";
 import Link from "next/link";
-import { LanguageList, translatedPages } from "@/app/Languages";
-import { useRouter } from "next/navigation";
+import SiteLangPicker from "@/app/siteLangPicker";
 
 export default function NavBar() {
   const [loginIsOpen, setLoginIsOpen] = useState(false);
   const [registerIsOpen, setRegisterIsOpen] = useState(false);
-  const [languageIsOpen, setLanguageIsOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [isPhoneMenuOpen, setIsPhoneMenuOpen] = useState(false);
-  const router = useRouter();
 
   // Theme on mount
   useEffect(() => {
@@ -97,54 +94,10 @@ export default function NavBar() {
                 </button>
 
                 <div className="relative" id="language-dropdown-container">
-                  <button
-                    type="button"
-                    id="language-dropdown-btn"
-                    className="flex items-center px-3 py-2 text-sm font-bold rounded-md lang-selector-hover"
-                    onClick={() => setLanguageIsOpen(!languageIsOpen)}
-                  >
-                    <span id="selected-language">Hebrew</span>
-                    <ChevronDown className="ml-1 text-xs" />
-                  </button>
-
-                  {languageIsOpen && (
-                    <div
-                      className="w-screen h-screen top-0 start-0 fixed z-40"
-                      onClick={() => setLanguageIsOpen(false)}
-                    ></div>
-                  )}
-
-                  <div
-                    hidden={!languageIsOpen}
-                    id="language-dropdown"
-                    className="fixed start-0 w-screen max-h-80 overflow-y-auto rounded-md shadow-lg z-50"
-                    style={{
-                      backgroundColor: "var(--card-background)",
-                      color: "var(--foreground)",
-                    }}
-                  >
-                    {LanguageList.filter((language) =>
-                      translatedPages.includes(language.code)
-                    ).map((language) => (
-                      <Link
-                        key={language.code}
-                        href="#"
-                        onClick={async (e) => {
-                          e.preventDefault();
-                          setLanguageIsOpen(false);
-                          document.cookie = `lang=${language.code}`;
-                          router.refresh();
-                        }}
-                        className="block px-4 py-2 text-sm lang-selector-hover"
-                      >
-                        {language.name + " (" + language.code + ")"}
-                      </Link>
-                    ))}
-                  </div>
+                  <SiteLangPicker lang="Hebrew" />
                 </div>
               </div>
             </div>
-
 
             {/* Right side */}
             <div className="hidden sm:flex items-center space-x-4">
@@ -158,51 +111,7 @@ export default function NavBar() {
               </button>
 
               {/* Language Selector */}
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setLanguageIsOpen(!languageIsOpen)}
-                  className="flex items-center text-sm font-bold px-3 py-2 rounded-md lang-selector-hover"
-                >
-                  <span>Hebrew</span>
-                  <ChevronDown className="ms-1 text-xs" />
-                </button>
-
-                {languageIsOpen && (
-                  <>
-                    <div
-                      className="fixed inset-0 bg-black opacity-0 z-40"
-                      onClick={() => setLanguageIsOpen(false)}
-                    />
-                    <dialog
-                      open={languageIsOpen}
-                      className="absolute end-0 mt-2 w-48 rounded-md shadow-lg max-h-80 overflow-y-auto ring-1 ring-black ring-opacity-5 z-50"
-                      style={{
-                        backgroundColor: "var(--card-background)",
-                        color: "var(--foreground)",
-                      }}
-                    >
-                      {LanguageList.filter((language) =>
-                        translatedPages.includes(language.code)
-                      ).map((language) => (
-                        <Link
-                          key={language.code}
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setLanguageIsOpen(false);
-                            document.cookie = `lang=${language.code}`;
-                            router.refresh();
-                          }}
-                          className="block px-4 py-2 text-sm lang-selector-hover"
-                        >
-                          {language.name} ({language.code})
-                        </Link>
-                      ))}
-                    </dialog>
-                  </>
-                )}
-              </div>
+              <SiteLangPicker lang="Hebrew" />
 
               {/* Auth Buttons */}
               <button
