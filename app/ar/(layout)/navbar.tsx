@@ -183,13 +183,8 @@ export default function NavBar() {
             {/* Dark mode toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-md transition"
-              style={{
-                backgroundColor: isDark
-                  ? "var(--card-background)"
-                  : "var(--secondary-background)",
-              }}
-              title="Toggle Dark Mode"
+             className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                title="Toggle Dark Mode"
             >
               {isDark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
