@@ -10,6 +10,7 @@
 :root {
   --background: #275287;        /* white background */
   --foreground: #111111;        /* dark text */
+  --title-color:#ffffff;
 
   --navbar-background: #ffffff;
   --navbar-foreground: #171717;

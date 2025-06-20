@@ -10,7 +10,7 @@ export default function FeaturesSection() {
         <div className="features-header text-center">
           <h2
             className="features-title text-3xl font-extrabold sm:text-4xl"
-            style={{ color: "var(--title-color)" }}
+            style={{ color: "var(--foreground)" }}
           >
             Accelerate Your Educational Journey
           </h2>
@@ -37,7 +37,7 @@ export default function FeaturesSection() {
               </div>
               <h3
                 className="multilingual-title mt-5 text-lg font-medium"
-                style={{ color: "var(--title-color)" }}
+                style={{ color: "var(--foreground)" }}
               >
                 Multilingual Support
               </h3>
@@ -63,7 +63,7 @@ export default function FeaturesSection() {
               </div>
               <h3
                 className="accelerated-title mt-5 text-lg font-medium"
-                style={{ color: "var(--title-color)" }}
+                style={{ color: "var(--foreground)" }}
               >
                 Accelerated Learning
               </h3>
@@ -89,7 +89,7 @@ export default function FeaturesSection() {
               </div>
               <h3
                 className="ai-title mt-5 text-lg font-medium"
-                style={{ color: "var(--title-color)" }}
+                style={{ color: "var(--foreground)" }}
               >
                 AI-Assisted Simplification
               </h3>

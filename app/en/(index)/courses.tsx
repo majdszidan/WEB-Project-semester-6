@@ -60,7 +60,7 @@ export default function CoursesCatagories() {
         <div className="courses-header text-center">
           <h2
             className="courses-title text-3xl font-extrabold sm:text-4xl"
-            style={{ color: "var(--title-color)" }}
+            style={{ color: "var(--foreground)" }}
           >
             {texts.title}
           </h2>
@@ -90,7 +90,7 @@ export default function CoursesCatagories() {
                   <div className="ml-5">
                     <h3
                       className="text-lg font-medium"
-                      style={{ color: "var(--title-color)" }}
+                      style={{ color: "var(--foreground)" }}
                     >
                       {category.title}
                     </h3>

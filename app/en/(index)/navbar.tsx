@@ -61,83 +61,90 @@ export default function NavBar() {
             <div className="flex items-center sm:hidden">
               <button
                 onClick={toggleTheme}
-                className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                className="p-2 rounded-md transition hover:bg-[var(--card-background)]"
                 title="Toggle Dark Mode"
               >
                 {isDark ? <Sun size={18} /> : <Moon size={18} />}
               </button>
+
               <MenuIcon
                 onClick={() => setIsPhoneMenuOpen(!isPhoneMenuOpen)}
-                className="text-blue-500"
+                className="text-[var(--primary-color)]"
               />
+
               <div
                 hidden={!isPhoneMenuOpen}
-                className="fixed flex justify-center flex-col items-center w-screen top-15 start-0  shadow-inner bg-white"
+                className="fixed flex justify-center flex-col items-center w-screen top-16 start-0 z-50 shadow-inner"
+                style={{
+                  backgroundColor: "var(--card-background)",
+                  color: "var(--foreground)",
+                }}
               >
                 <button
                   id="login-btn"
-                  className="px-4 py-2 text-indigo-600 font-medium rounded-md hover:bg-indigo-50 transition"
-                  onClick={() => {
-                    setLoginIsOpen(true);
-                  }}
+                  className="px-4 py-2 font-medium rounded-md transition hover:bg-[var(--background)] text-[var(--primary-color)]"
+                  onClick={() => setLoginIsOpen(true)}
                 >
                   Log in
                 </button>
+
                 <button
                   id="signup-btn"
-                  className="px-4 py-2  text-indigo-600 font-medium rounded-md hover:bg-indigo-50 transition"
-                  onClick={() => {
-                    setRegisterIsOpen(true);
-                  }}
+                  className="px-4 py-2 font-medium rounded-md transition hover:bg-[var(--background)] text-[var(--primary-color)]"
+                  onClick={() => setRegisterIsOpen(true)}
                 >
                   Sign up
                 </button>
+
                 <div className="relative" id="language-dropdown-container">
                   <button
                     type="button"
                     id="language-dropdown-btn"
-                    className="flex items-center text-gray-700 px-3 py-2 text-sm font-bold rounded-md hover:bg-gray-100"
-                    onClick={() => {
-                      setLanguageIsOpen(!languageIsOpen);
-                    }}
+                    className="flex items-center px-3 py-2 text-sm font-bold rounded-md lang-selector-hover"
+                    onClick={() => setLanguageIsOpen(!languageIsOpen)}
                   >
                     <span id="selected-language">English</span>
-                    <ChevronDown className="ml-1 text-xs"></ChevronDown>
+                    <ChevronDown className="ml-1 text-xs" />
                   </button>
+
                   {languageIsOpen && (
                     <div
-                      className="w-screen h-screen top-0 start-0  fixed bg-black opacity-0"
+                      className="w-screen h-screen top-0 start-0 fixed z-40"
                       onClick={() => setLanguageIsOpen(false)}
                     ></div>
                   )}
-                  <dialog
-                    open={languageIsOpen}
+
+                  <div
+                    hidden={!languageIsOpen}
                     id="language-dropdown"
-                    className="fixed start-0 w-screen rounded-md shadow-lg max-h-80 overflow-y-auto bg-white ring-1 ring-black ring-opacity-5"
+                    className="fixed start-0 w-screen max-h-80 overflow-y-auto rounded-md shadow-lg z-50"
+                    style={{
+                      backgroundColor: "var(--card-background)",
+                      color: "var(--foreground)",
+                    }}
                   >
                     {LanguageList.filter((language) =>
                       translatedPages.includes(language.code)
-                    ).map((language) => {
-                      return (
-                        <Link
-                          key={language.code}
-                          href={"#"}
-                          onClick={async (e) => {
-                            e.preventDefault();
-                            setLanguageIsOpen(false);
-                            document.cookie = `lang=${language.code}`;
-                            router.refresh();
-                          }}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          {language.name + " (" + language.code + ")"}
-                        </Link>
-                      );
-                    })}
-                  </dialog>
+                    ).map((language) => (
+                      <Link
+                        key={language.code}
+                        href="#"
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          setLanguageIsOpen(false);
+                          document.cookie = `lang=${language.code}`;
+                          router.refresh();
+                        }}
+                        className="block px-4 py-2 text-sm lang-selector-hover"
+                      >
+                        {language.name + " (" + language.code + ")"}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
+
 
             {/* Right side */}
             <div className="hidden sm:flex items-center space-x-4">
@@ -199,13 +206,13 @@ export default function NavBar() {
 
               {/* Auth Buttons */}
               <button
-                className="px-4 py-2 text-indigo-600 font-medium rounded-md hover:bg-indigo-50 dark:hover:bg-indigo-900 transition"
+                className="px-4 py-2 font-medium rounded-md transition lang-selector-hover text-[var(--primary-color)]"
                 onClick={() => setLoginIsOpen(true)}
               >
                 Log in
               </button>
               <button
-                className="px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 transition"
+                className="px-4 py-2 font-medium rounded-md transition lang-selector-hover text-[var(--primary-color)]"
                 onClick={() => setRegisterIsOpen(true)}
               >
                 Sign up

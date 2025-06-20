@@ -89,76 +89,94 @@ export default function NavBar() {
               {isDark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
 
-              <MenuIcon
-                onClick={() => setIsPhoneMenuOpen(!isPhoneMenuOpen)}
-                className="text-blue-500"
-              />
-              <div
-                hidden={!isPhoneMenuOpen}
-                className="fixed flex justify-center flex-col items-center w-screen top-15 start-0  shadow-inner bg-white"
-              >
-                <div className="flex flex-col mt-2 items-center space-x-4">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm font-bold font-large text-black">
-                      {username.split("@")[0]}
-                    </span>
-                    <User className="w-5 h-5 text-indigo-600" />
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition"
-                  >
-                    <LogOut className="w-4 h-4 me-1" />
-                    Logout
-                  </button>
+            <MenuIcon
+              onClick={() => setIsPhoneMenuOpen(!isPhoneMenuOpen)}
+              className="text-[var(--primary-color)]"
+            />
+
+            <div
+              hidden={!isPhoneMenuOpen}
+              className="fixed flex justify-center flex-col items-center w-screen top-16 start-0 z-50 shadow-inner"
+              style={{
+                backgroundColor: "var(--card-background)",
+                color: "var(--foreground)",
+              }}
+            >
+              <div className="flex flex-col mt-2 items-center space-y-2">
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-bold text-[var(--foreground)]">
+                    {username.split("@")[0]}
+                  </span>
+                  <User className="w-5 h-5 text-[var(--primary-color)]" />
                 </div>
 
-                <div className="relative" id="language-dropdown-container">
-                  <button
-                    type="button"
-                    id="language-dropdown-btn"
-                    className="flex items-center text-gray-700 px-3 py-2 text-sm font-bold rounded-md hover:bg-gray-100"
-                    onClick={() => {
-                      setLanguageIsOpen(!languageIsOpen);
-                    }}
-                  >
-                    <span id="selected-language">English</span>
-                    <ChevronDown className="ml-1 text-xs"></ChevronDown>
-                  </button>
-                  {languageIsOpen && (
-                    <div
-                      className="w-screen h-screen top-0 start-0  fixed bg-black opacity-0"
-                      onClick={() => setLanguageIsOpen(false)}
-                    ></div>
-                  )}
-                  <dialog
-                    open={languageIsOpen}
-                    id="language-dropdown"
-                    className="fixed start-0 w-screen rounded-md shadow-lg max-h-80 overflow-y-auto bg-white ring-1 ring-black ring-opacity-5"
-                  >
-                    {LanguageList.filter((language) =>
-                      translatedPages.includes(language.code)
-                    ).map((language) => {
-                      return (
-                        <Link
-                          key={language.code}
-                          href={"#"}
-                          onClick={async (e) => {
-                            e.preventDefault();
-                            setLanguageIsOpen(false);
-                            document.cookie = `lang=${language.code}`;
-                            router.refresh();
-                          }}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          {language.name + " (" + language.code + ")"}
-                        </Link>
-                      );
-                    })}
-                  </dialog>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center px-3 py-2 text-sm font-medium rounded-md transition"
+                  style={{
+                    color: "var(--danger-color)",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor = "var(--hover-danger-bg)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = "transparent")
+                  }
+                >
+                  <LogOut className="w-4 h-4 me-1" />
+                  Logout
+                </button>
+              </div>
+
+              <div className="relative" id="language-dropdown-container">
+                <button
+                  type="button"
+                  id="language-dropdown-btn"
+                  className="flex items-center px-3 py-2 text-sm font-bold rounded-md lang-selector-hover"
+                  onClick={() => setLanguageIsOpen(!languageIsOpen)}
+                >
+                  <span id="selected-language">English</span>
+                  <ChevronDown className="ml-1 text-xs" />
+                </button>
+
+                {languageIsOpen && (
+                  <div
+                    className="w-screen h-screen top-0 start-0 fixed z-40"
+                    onClick={() => setLanguageIsOpen(false)}
+                  />
+                )}
+
+                <div
+                  hidden={!languageIsOpen}
+                  id="language-dropdown"
+                  className="fixed start-0 w-screen max-h-80 overflow-y-auto rounded-md shadow-lg z-50"
+                  style={{
+                    backgroundColor: "var(--card-background)",
+                    color: "var(--foreground)",
+                  }}
+                >
+                  {LanguageList.filter((language) =>
+                    translatedPages.includes(language.code)
+                  ).map((language) => (
+                    <Link
+                      key={language.code}
+                      href="#"
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        setLanguageIsOpen(false);
+                        document.cookie = `lang=${language.code}`;
+                        router.refresh();
+                      }}
+                      className="block px-4 py-2 text-sm lang-selector-hover"
+                    >
+                      {language.name + " (" + language.code + ")"}
+                    </Link>
+                  ))}
                 </div>
               </div>
             </div>
+          </div>
+
 
           {/* Right side */}
           <div className="hidden sm:flex items-center space-x-4">
