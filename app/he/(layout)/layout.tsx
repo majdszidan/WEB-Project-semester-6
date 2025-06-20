@@ -8,6 +8,7 @@ export default function HomeLayout({
   return (
     <div
       className="min-h-screen w-screen transition-colors"
+      dir="rtl"
       style={{
         backgroundColor: "var(--background)",
         color: "var(--foreground)",
