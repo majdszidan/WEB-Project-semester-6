@@ -49,7 +49,6 @@ export default function AddCourseButton() {
       });
 
       setSyllabus(aiSyllabus);
-      // ✅ Pre-check all topics
       const allTitles = new Set(aiSyllabus.core_concepts);
       setSelectedTopics(allTitles);
       setShowSyllabusModal(true);
@@ -66,7 +65,19 @@ export default function AddCourseButton() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition-transform transform hover:scale-105 z-50"
+          className="fixed bottom-6 right-6 p-2 rounded-full shadow-lg transition-transform transform hover:scale-105 z-50"
+          style={{
+            backgroundColor: 'var(--primary-color)',
+            color: 'var(--title-color)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--primary-color)';
+            e.currentTarget.style.filter = 'brightness(0.9)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--primary-color)';
+            e.currentTarget.style.filter = 'brightness(1)';
+          }}
         >
           <PlusIcon className="w-7 h-7" />
         </button>
@@ -76,48 +87,77 @@ export default function AddCourseButton() {
         <>
           <div className="fixed inset-0 z-40 w-screen h-screen bg-black opacity-50"></div>
           <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
+            <div
+              className="rounded-2xl shadow-xl w-full max-w-md p-6 relative"
+              style={{
+                backgroundColor: 'var(--card-background)',
+                color: 'var(--card-foreground)',
+              }}
+            >
               <button
                 onClick={() => setIsOpen(false)}
-                className="absolute top-4 right-4 text-black hover:text-gray-700"
+                className="absolute top-4 right-4 hover:opacity-70"
+                style={{ color: 'var(--card-foreground)' }}
               >
                 <X className="w-5 h-5" />
               </button>
 
-              <h2 className="text-2xl font-bold text-black text-center mb-6">
-                הוספת קורס חדש
+              <h2
+                className="text-2xl font-bold text-center mb-6"
+                style={{ color: 'var(--card-foreground)' }}
+              >
+                Add New Course
               </h2>
 
               {error && (
-                <div className="mb-4 text-red-600 text-center font-medium">
+                <div
+                  className="mb-4 text-center font-medium"
+                  style={{ color: 'var(--danger-color)' }}
+                >
                   {error}
                 </div>
               )}
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label
+                    className="block text-sm font-medium"
+                    style={{ color: 'var(--card-foreground)' }}
+                  >
                     שם הקורס
                   </label>
                   <input
                     type="text"
                     value={courseName}
-                    placeholder="שם כלשהו לקורס"
+                    placeholder="שם של הקורס"
                     onChange={(e) => setCourseName(e.target.value)}
-                    className="mt-1 block w-full border text-black border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full rounded-md shadow-sm px-3 py-2 focus:ring-2 focus:outline-none"
+                    style={{
+                      backgroundColor: 'var(--answer-bg-default)',
+                      color: 'var(--foreground)',
+                      border: `1px solid var(--border-color)`,
+                    }}
                     required
                     disabled={loading}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-black">
+                  <label
+                    className="block text-sm font-medium"
+                    style={{ color: 'var(--card-foreground)' }}
+                  >
                     שפה
                   </label>
                   <select
                     value={language}
                     onChange={(e) => setLanguage(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 text-black rounded-md shadow-sm px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full rounded-md shadow-sm px-3 py-2 focus:ring-2 focus:outline-none"
+                    style={{
+                      backgroundColor: 'var(--answer-bg-default)',
+                      color: 'var(--foreground)',
+                      border: `1px solid var(--border-color)`,
+                    }}
                     required
                   >
                     <option value="" disabled>
@@ -132,16 +172,24 @@ export default function AddCourseButton() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label
+                    className="block text-sm font-medium"
+                    style={{ color: 'var(--card-foreground)' }}
+                  >
                     תיאור
                   </label>
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="mt-1 block w-full text-black border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full rounded-md shadow-sm px-3 py-2 focus:ring-2 focus:outline-none"
+                    style={{
+                      backgroundColor: 'var(--answer-bg-default)',
+                      color: 'var(--foreground)',
+                      border: `1px solid var(--border-color)`,
+                    }}
                     rows={4}
                     required
-                    placeholder="תאר את נושא הקורס, לדוגמה: 'פיתוח אתרים', 'מספרים מרוכבים' וכו'."
+                    placeholder="תאר את נושא הקורס, לדוגמה 'חוק ניוטן', 'מספרים דמיוניים' וכו'."
                     disabled={loading}
                   />
                 </div>
@@ -150,9 +198,22 @@ export default function AddCourseButton() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className={`w-full ${
-                      loading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
-                    } text-white py-2 px-4 rounded-md shadow transition`}
+                    className="w-full py-2 px-4 rounded-md shadow transition"
+                    style={{
+                      backgroundColor: loading ? 'var(--border-color)' : 'var(--primary-color)',
+                      color: 'var(--title-color)',
+                      opacity: loading ? 0.6 : 1,
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!loading) {
+                        e.currentTarget.style.filter = 'brightness(0.9)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!loading) {
+                        e.currentTarget.style.filter = 'brightness(1)';
+                      }
+                    }}
                   >
                     {loading ? "מייצר סילבוס..." : "צור סילבוס"}
                   </button>
@@ -163,13 +224,21 @@ export default function AddCourseButton() {
         </>
       )}
 
-      {/* AI Syllabus Modal */}
       {showSyllabusModal && syllabus && (
         <>
           <div className="fixed inset-0 z-40 w-screen h-screen bg-black opacity-50"></div>
           <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
-              <h3 className="text-2xl font-semibold text-black mb-4 text-center">
+            <div
+              className="rounded-2xl shadow-xl w-full max-w-md p-6 relative"
+              style={{
+                backgroundColor: 'var(--card-background)',
+                color: 'var(--card-foreground)',
+              }}
+            >
+              <h3
+                className="text-2xl font-semibold mb-4 text-center"
+                style={{ color: 'var(--card-foreground)' }}
+              >
                 בחר נושאי סילבוס
               </h3>
 
@@ -184,15 +253,28 @@ export default function AddCourseButton() {
                           const newSet = new Set(prev);
                           if (newSet.has(item)) newSet.delete(item);
                           else newSet.add(item);
-
                           return newSet;
                         });
                       }}
                       className="mt-1"
+                      style={{
+                        accentColor: 'var(--primary-color)',
+                      }}
                     />
                     <div>
-                      <p className="text-black font-medium">{item.title}</p>
-                      <p className="text-sm text-gray-600">
+                      <p
+                        className="font-medium"
+                        style={{ color: 'var(--card-foreground)' }}
+                      >
+                        {item.title}
+                      </p>
+                      <p
+                        className="text-sm"
+                        style={{
+                          color: 'var(--card-foreground)',
+                          opacity: 0.7,
+                        }}
+                      >
                         {item.description}
                       </p>
                     </div>
@@ -203,32 +285,56 @@ export default function AddCourseButton() {
               <div className="mt-6 flex justify-end space-x-2">
                 <button
                   onClick={() => setShowSyllabusModal(false)}
-                  className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded"
+                  className="px-4 py-2 rounded transition"
+                  style={{
+                    backgroundColor: 'var(--secondary-background)',
+                    color: 'var(--foreground)',
+                    border: `1px solid var(--border-color)`,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--border-color)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--secondary-background)';
+                  }}
                 >
                   חזור
                 </button>
                 <button
-                  onClick={() => {
-                    CreateCourse({
-                      name: courseName,
-                      language: language,
-                      description: syllabus.course_summary,
-                      topics: selectedTopics,
-                      icon: syllabus.icon,
-                      progress: 0,
-                      genre: syllabus.topic_area,
-                      lastAccessed: new Date(),
-                      created: new Date(),
-                    })
-                      .then(() => {
-                        setShowSyllabusModal(false);
-                        setIsOpen(false);
-                      })
-                      .catch((err) => alert(err.message));
+                  onClick={async () => {
+                    try {
+                      await CreateCourse({
+                        name: courseName,
+                        language: language,
+                        description: syllabus.course_summary,
+                        topics: selectedTopics,
+                        icon: syllabus.icon,
+                        progress: 0,
+                        genre: syllabus.topic_area,
+                        lastAccessed: new Date(),
+                        created: new Date(),
+                      });
+
+                      setShowSyllabusModal(false);
+                      setIsOpen(false);
+                    } catch (err) {
+                      alert((err as Error).message);
+                    }
                   }}
-                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+                  className="px-4 py-2 rounded transition"
+                  style={{
+                    backgroundColor: 'var(--answer-bg-correct)',
+                    color: 'var(--title-color)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.filter = 'brightness(0.9)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.filter = 'brightness(1)';
+                  }}
                 >
                   צור קורס
+
                 </button>
               </div>
             </div>

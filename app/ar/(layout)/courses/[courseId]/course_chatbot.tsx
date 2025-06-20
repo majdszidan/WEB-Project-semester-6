@@ -122,7 +122,7 @@ export default function CourseChatbot({ course }: { course: Course }) {
       <div className="flex items-center justify-between p-4 border-b bg-blue-50 ">
         <div>
           <h3 className="font-semibold text-gray-800 ">Course Assistant</h3>
-          <p className="text-sm text-gray-600 max-w-2xl text-nowrap truncate text-ellipsis">
+          <p className="text-sm text-gray-600 max-w-2xl w-[80vw] text-nowrap truncate text-ellipsis">
             Ask me about {course.name}
             <br />
             topics:{" "}
@@ -205,7 +205,7 @@ export default function CourseChatbot({ course }: { course: Course }) {
             disabled={!inputMessage.trim() || isLoading || loadingWelcome}
             className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            <SendHorizonalIcon className="-scale-[-1]" />
+            <SendHorizonalIcon />
           </button>
         </div>
       </div>

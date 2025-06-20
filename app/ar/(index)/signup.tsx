@@ -2,6 +2,7 @@ import { auth } from "@/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { CheckCircle2Icon, InfoIcon, XIcon } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
+
 export default function SignUpModal({
   isOpen,
   setIsOpen,
@@ -13,8 +14,9 @@ export default function SignUpModal({
   const [success, setSuccess] = useState<boolean>(false);
 
   useEffect(() => {
-    (document.getElementById("signup-form") as HTMLFormElement).reset();
+    (document.getElementById("signup-form") as HTMLFormElement)?.reset();
   }, [isOpen]);
+
   const register = (form: FormEvent<HTMLFormElement>) => {
     form.preventDefault();
     setSuccess(false);
@@ -25,6 +27,7 @@ export default function SignUpModal({
     const password2 = data.get("re-password");
     const fName = data.get("first-name");
     const lName = data.get("last-name");
+
     if (!fName) {
       setError("الرجاء إدخال اسمك الأول");
       return;
@@ -33,7 +36,7 @@ export default function SignUpModal({
       return;
     } else if (
       !email ||
-      !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$/.test(email.toString())
+      !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email.toString())
     ) {
       setError("الرجاء إدخال عنوان بريدك الإلكتروني");
       return;
@@ -46,33 +49,34 @@ export default function SignUpModal({
     } else if (password !== password2) {
       setError("كلمتا المرور غير متطابقتين");
       return;
-    } else {
-      createUserWithEmailAndPassword(
-        auth,
-        email.toString(),
-        password.toString()
-      )
-        .then(async (userCredential) => {
-          await updateProfile(userCredential.user, {
-            displayName: fName + " " + lName,
-          });
-          setSuccess(true);
-        })
-        .catch((error) => {
-          setError(error.message);
-        });
     }
+
+    createUserWithEmailAndPassword(
+      auth,
+      email.toString(),
+      password.toString()
+    )
+      .then(async (userCredential) => {
+        await updateProfile(userCredential.user, {
+          displayName: fName + " " + lName,
+        });
+        setSuccess(true);
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
   };
+
   return (
     <dialog
       id="signup-modal-dialog"
       className="w-screen h-screen bg-transparent fixed top-0 start-0 z-50"
       open={isOpen}
     >
-      <div
-        id="signup-modal-overlay"
-        className="bg-gray-500 opacity-75 transition-opacity w-full h-screen"
-      ></div>
+      {/* Backdrop */}
+      <div className="bg-black opacity-40 transition-opacity w-full h-screen"></div>
+
+      {/* Modal Wrapper */}
       <div
         id="signup-modal-wrapper"
         className="fixed inset-0 z-50 w-screen h-screen flex items-center justify-center"
@@ -81,136 +85,153 @@ export default function SignUpModal({
             setIsOpen(false);
         }}
       >
+        {/* Modal Container */}
         <div
-          id="signup-modal-container"
-          className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full"
+          className="rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full"
+          style={{
+            backgroundColor: "var(--card-background)",
+            color: "var(--card-foreground)",
+          }}
         >
-          <div
-            id="signup-modal-content"
-            className="bg-white px-4 pt-5 pb-4 sm:p-6"
-          >
-            <div
-              id="signup-modal-header"
-              className="flex justify-between items-center mb-4"
-            >
-              <h3
-                id="signup-modal-title"
-                className="text-lg font-medium text-gray-900"
-              >
-                إنشاء حساب جديد
-              </h3>
+          <div className="px-4 pt-5 pb-4 sm:p-6">
+            {/* Header */}
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium">إنشاء حساب جديد</h3>
               <button
                 type="button"
-                id="signup-close-button"
-                className="close-modal text-gray-400 hover:text-gray-500"
+                className="hover:opacity-70"
                 onClick={() => setIsOpen(false)}
               >
                 <XIcon />
               </button>
             </div>
+
+            {/* Error Message */}
             {error && (
               <div
-                id="signup-error-box"
-                className="text-red-600 w-full bg-red-300 p-2 rounded-md my-2"
+                className="w-full p-2 rounded-md my-2 flex items-center"
+                style={{
+                  backgroundColor: "var(--answer-bg-wrong)",
+                  color: "var(--answer-text-wrong)",
+                }}
               >
                 <InfoIcon className="inline me-2" />
                 <p className="inline">{error}</p>
               </div>
             )}
+
+            {/* Success Message */}
             {success && (
               <div
-                id="signup-success-box"
-                className="text-green-600 w-full bg-green-300 p-2 rounded-md my-2"
+                className="w-full p-2 rounded-md my-2 flex items-center"
+                style={{
+                  backgroundColor: "var(--answer-bg-correct)",
+                  color: "var(--answer-text-correct)",
+                }}
               >
                 <CheckCircle2Icon className="inline me-2" />
                 <p className="inline">
-                  تم إنشاء الحساب بنجاح, جاري تسجيل الدخول...!
+                  تم إنشاء الحساب بنجاح، جاري تسجيل الدخول...!
                 </p>
               </div>
             )}
 
+            {/* Sign Up Form */}
             <form id="signup-form" className="space-y-6" onSubmit={register}>
-              <div id="signup-name-fields" className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label
-                    htmlFor="first-name"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="first-name" className="block text-sm font-medium">
                     الاسم الأول
                   </label>
                   <input
                     type="text"
                     name="first-name"
                     id="first-name"
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="mt-1 block w-full rounded-md shadow-sm py-2 px-3"
+                    style={{
+                      backgroundColor: "var(--secondary-background)",
+                      color: "var(--foreground)",
+                      border: "1px solid var(--border-color)",
+                    }}
                   />
                 </div>
                 <div>
-                  <label
-                    htmlFor="last-name"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="last-name" className="block text-sm font-medium">
                     الاسم الأخير
                   </label>
                   <input
                     type="text"
                     name="last-name"
                     id="last-name"
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="mt-1 block w-full rounded-md shadow-sm py-2 px-3"
+                    style={{
+                      backgroundColor: "var(--secondary-background)",
+                      color: "var(--foreground)",
+                      border: "1px solid var(--border-color)",
+                    }}
                   />
                 </div>
               </div>
 
               <div>
-                <label
-                  htmlFor="signup-email"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="signup-email" className="block text-sm font-medium">
                   عنوان البريد الإلكتروني
                 </label>
                 <input
                   type="email"
                   name="email"
                   id="signup-email"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 block w-full rounded-md shadow-sm py-2 px-3"
+                  style={{
+                    backgroundColor: "var(--secondary-background)",
+                    color: "var(--foreground)",
+                    border: "1px solid var(--border-color)",
+                  }}
                 />
               </div>
 
               <div>
-                <label
-                  htmlFor="signup-password"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="signup-password" className="block text-sm font-medium">
                   كلمة المرور
                 </label>
                 <input
                   type="password"
                   name="password"
                   id="signup-password"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 block w-full rounded-md shadow-sm py-2 px-3"
+                  style={{
+                    backgroundColor: "var(--secondary-background)",
+                    color: "var(--foreground)",
+                    border: "1px solid var(--border-color)",
+                  }}
                 />
               </div>
 
               <div>
-                <label
-                  htmlFor="confirm-password"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="confirm-password" className="block text-sm font-medium">
                   تأكيد كلمة المرور
                 </label>
                 <input
                   type="password"
                   name="re-password"
                   id="confirm-password"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 block w-full rounded-md shadow-sm py-2 px-3"
+                  style={{
+                    backgroundColor: "var(--secondary-background)",
+                    color: "var(--foreground)",
+                    border: "1px solid var(--border-color)",
+                  }}
                 />
               </div>
 
               <div>
                 <button
                   type="submit"
-                  id="signup-submit-button"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium"
+                  style={{
+                    backgroundColor: "var(--primary-color)",
+                    color: "#ffffff",
+                  }}
                 >
                   إنشاء حساب
                 </button>

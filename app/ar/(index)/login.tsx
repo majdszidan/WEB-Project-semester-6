@@ -1,4 +1,5 @@
 "use client";
+
 import { auth } from "@/firebase";
 import {
   sendPasswordResetEmail,
@@ -6,6 +7,7 @@ import {
 } from "firebase/auth";
 import { InfoIcon, XIcon } from "lucide-react";
 import { FormEvent, useState } from "react";
+
 export default function LoginModal({
   isOpen,
   setIsOpen,
@@ -15,6 +17,7 @@ export default function LoginModal({
 }) {
   const [error, setError] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+
   const login = (form: FormEvent<HTMLFormElement>) => {
     form.preventDefault();
     setError("");
@@ -31,13 +34,15 @@ export default function LoginModal({
       password?.toString() ?? ""
     ).catch((e) => setError(e.message));
   };
+
   return (
     <dialog
-      className="login-modal w-screen h-screen bg-transparent fixed top-0 start-0 z-50"
+      className="login-modal w-screen h-screen bg-transparent fixed top-0 left-0 z-50"
       open={isOpen}
     >
       {/* Modal Backdrop */}
-      <div className="login-backdrop bg-gray-500 opacity-75 transition-opacity w-full h-screen"></div>
+      <div className="login-backdrop bg-black opacity-40 transition-opacity w-full h-screen" />
+
       {/* Modal Container */}
       <div
         className="login-container fixed inset-0 z-50 w-screen h-screen flex items-center justify-center"
@@ -48,88 +53,118 @@ export default function LoginModal({
         id="login-clickable-area"
       >
         {/* Modal Content */}
-        <div className="login-content bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full">
-          <div className="login-body bg-white px-4 pt-5 pb-4 sm:p-6">
-            {/* Header with Title and Close Button */}
+        <div
+          className="login-content rounded-lg overflow-hidden shadow-xl transform transition-all max-w-md w-full"
+          style={{
+            backgroundColor: "var(--card-background)",
+            color: "var(--card-foreground)",
+          }}
+        >
+          <div className="login-body px-4 pt-5 pb-4 sm:p-6">
+            {/* Header */}
             <div className="login-header flex justify-between items-center mb-4">
-              <h3 className="login-title text-lg font-medium text-gray-900">
+              <h3 className="login-title text-lg font-medium">
                 تسجيل الدخول إلى حسابك
               </h3>
               <button
                 type="button"
-                className="login-close-button text-gray-400 hover:text-gray-500"
+                className="login-close-button hover:opacity-70"
                 onClick={() => setIsOpen(false)}
               >
                 <XIcon className="login-close-icon" />
               </button>
             </div>
+
             {/* Error Message */}
             {error && (
-              <div className="login-error text-red-600 w-full bg-red-300 p-2 rounded-md my-2">
-                <InfoIcon className="login-error-icon inline me-2" />
+              <div
+                className="login-error w-full p-2 rounded-md my-2 flex items-center"
+                style={{
+                  backgroundColor: "var(--answer-bg-wrong)",
+                  color: "var(--answer-text-wrong)",
+                }}
+              >
+                <InfoIcon className="login-error-icon inline mr-2" />
                 <p className="login-error-text inline">{error}</p>
               </div>
             )}
 
             {/* Login Form */}
             <form className="login-form space-y-6" onSubmit={login}>
-              {/* Email Field */}
+              {/* Email */}
               <div className="login-email-field">
                 <label
                   htmlFor="email"
-                  className="login-email-label block text-sm font-medium text-gray-700"
+                  className="login-email-label block text-sm font-medium"
                 >
                   عنوان البريد الإلكتروني
+
                 </label>
                 <input
                   type="email"
                   name="email"
                   id="email"
-                  value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="login-email-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  value={email}
+                  className="login-email-input mt-1 block w-full rounded-md shadow-sm py-2 px-3"
+                  style={{
+                    backgroundColor: "var(--secondary-background)",
+                    color: "var(--foreground)",
+                    border: "1px solid var(--border-color)",
+                  }}
                 />
               </div>
 
-              {/* Password Field */}
+              {/* Password */}
               <div className="login-password-field">
                 <label
                   htmlFor="password"
-                  className="login-password-label block text-sm font-medium text-gray-700"
+                  className="login-password-label block text-sm font-medium"
                 >
                   كلمة المرور
+
                 </label>
                 <input
                   type="password"
                   name="password"
                   id="password"
-                  className="login-password-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="login-password-input mt-1 block w-full rounded-md shadow-sm py-2 px-3"
+                  style={{
+                    backgroundColor: "var(--secondary-background)",
+                    color: "var(--foreground)",
+                    border: "1px solid var(--border-color)",
+                  }}
                 />
               </div>
 
               {/* Forgot Password */}
               <div className="login-options flex items-center justify-between">
-                <div className="login-forgot-password">
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (email.length > 0) {
-                        sendPasswordResetEmail(auth, email?.toString() ?? "");
-                      } else setError("الرجاء إدخال عنوان بريدك الإلكتروني");
-                    }}
-                    className="login-forgot-link text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    هل نسيت كلمة المرور؟
-                  </a>
-                </div>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (email.length > 0) {
+                      sendPasswordResetEmail(auth, email.toString());
+                    } else setError("Please enter your email");
+                  }}
+                  className="login-forgot-link text-sm font-medium"
+                  style={{
+                    color: "var(--primary-color)",
+                  }}
+                >
+                  هل نسيت كلمة المرور؟
+                </a>
               </div>
 
-              {/* Submit Button */}
+              {/* Submit */}
               <div className="login-submit">
                 <button
                   type="submit"
-                  className="login-submit-button w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="login-submit-button w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium"
+                  style={{
+                    backgroundColor: "var(--primary-color)",
+                    color: "#fff",
+                  }}
                 >
                   تسجيل الدخول
                 </button>
