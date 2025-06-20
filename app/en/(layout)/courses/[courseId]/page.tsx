@@ -157,8 +157,7 @@ export default function CoursePage() {
                   }}
                 >
                   {choice}{" "}
-                  {answers[id] &&
-                    (choice === q.correct_answer ? "✔️" : "❌")}
+                  {answers[id] && (choice === q.correct_answer ? "✔️" : "❌")}
                 </button>
               );
             })}
@@ -204,7 +203,7 @@ export default function CoursePage() {
   return (
     course?.name && (
       <div
-        className="min-h-screen transition-colors"
+        className="min-h-screen transition-colors pt-15"
         style={{
           backgroundColor: "var(--background)",
           color: "var(--foreground)",
