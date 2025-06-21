@@ -61,17 +61,19 @@ export default function CourseNav({
       <button
         onClick={submit}
         disabled={!canSubmit || quiz != 0}
-         style={{
-          backgroundColor: canSubmit && isLastQuiz
-            ? "var(--success-color, #22c55e)" // green fallback
-            : "var(--border-color, #d1d5db)",
-          color: canSubmit && isLastQuiz
-            ? "var(--card-background, #fff)"
-            : "var(--foreground)",
+        style={{
+          backgroundColor:
+            canSubmit && isLastQuiz
+              ? "var(--success-color, #22c55e)" // green fallback
+              : "var(--border-color, #d1d5db)",
+          color:
+            canSubmit && isLastQuiz
+              ? "var(--card-background, #fff)"
+              : "var(--foreground)",
         }}
         className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
-        <SendHorizonalIcon className="mr-1" />
+        <SendHorizonalIcon className="mr-1 -scale-[-1]" />
       </button>
     </div>
   );
