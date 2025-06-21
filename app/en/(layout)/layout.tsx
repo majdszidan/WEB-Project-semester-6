@@ -7,14 +7,14 @@ export default function HomeLayout({
 }>) {
   return (
     <div
-      className="min-h-screen w-screen transition-colors"
+      className="min-h-screen w-full transition-colors"
       style={{
         backgroundColor: "var(--background)",
         color: "var(--foreground)",
       }}
     >
       <NavBar />
-      <div className=" flex justify-center">
+      <div className=" flex w-full justify-center">
         <main className="max-w-6xl w-full">{children}</main>
       </div>
     </div>
