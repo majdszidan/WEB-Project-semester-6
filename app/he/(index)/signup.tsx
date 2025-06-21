@@ -74,7 +74,7 @@ export default function SignUpModal({
 
       <div
         id="signup-modal-wrapper"
-        className="fixed inset-0 z-50 w-screen h-screen flex items-center justify-center"
+        className="fixed inset-0 m-2 z-50 h-screen flex items-center justify-center"
         onClick={(e) => {
           if ((e.target as HTMLElement).id === "signup-modal-wrapper") {
             setIsOpen(false);
@@ -122,18 +122,14 @@ export default function SignUpModal({
                 }}
               >
                 <CheckCircle2Icon className="inline me-2" />
-                <p className="inline">
-                  החשבון נוצר בהצלחה, מתחבר לחשבון...!
-                </p>
+                <p className="inline">החשבון נוצר בהצלחה, מתחבר לחשבון...!</p>
               </div>
             )}
 
             <form id="signup-form" className="space-y-6" onSubmit={register}>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium">
-                    שם פרטי
-                  </label>
+                  <label className="block text-sm font-medium">שם פרטי</label>
                   <input
                     type="text"
                     name="first-name"
@@ -146,9 +142,7 @@ export default function SignUpModal({
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium">
-                    שם משפחה
-                  </label>
+                  <label className="block text-sm font-medium">שם משפחה</label>
                   <input
                     type="text"
                     name="last-name"
@@ -193,9 +187,7 @@ export default function SignUpModal({
               </div>
 
               <div>
-                <label className="block text-sm font-medium">
-                  אימות סיסמה
-                </label>
+                <label className="block text-sm font-medium">אימות סיסמה</label>
                 <input
                   type="password"
                   name="re-password"
@@ -211,11 +203,8 @@ export default function SignUpModal({
               <div>
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium"
-                  style={{
-                    backgroundColor: "var(--primary-color)",
-                    color: "#ffffff",
-                  }}
+                  className="w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium
+                  bg-[var(--primary-color)] text-white hover:bg-[var(--primary-color-hover)] active:bg-[var(--primary-color-hover)]"
                 >
                   הרשמה
                 </button>

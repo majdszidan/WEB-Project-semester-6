@@ -45,7 +45,7 @@ export default function LoginModal({
 
       {/* Modal Container */}
       <div
-        className="login-container fixed inset-0 z-50 w-screen h-screen flex items-center justify-center"
+        className="login-container fixed inset-0 m-2 z-50 h-screen flex items-center justify-center"
         onClick={(e) => {
           if ((e.target as HTMLElement).id === "login-clickable-area")
             setIsOpen(false);
@@ -98,7 +98,6 @@ export default function LoginModal({
                   className="login-email-label block text-sm font-medium"
                 >
                   عنوان البريد الإلكتروني
-
                 </label>
                 <input
                   type="email"
@@ -122,7 +121,6 @@ export default function LoginModal({
                   className="login-password-label block text-sm font-medium"
                 >
                   كلمة المرور
-
                 </label>
                 <input
                   type="password"
@@ -160,11 +158,8 @@ export default function LoginModal({
               <div className="login-submit">
                 <button
                   type="submit"
-                  className="login-submit-button w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium"
-                  style={{
-                    backgroundColor: "var(--primary-color)",
-                    color: "#fff",
-                  }}
+                  className="login-submit-button w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium
+                  bg-[var(--primary-color)] text-white hover:bg-[var(--primary-color-hover)] active:bg-[var(--primary-color-hover)]"
                 >
                   تسجيل الدخول
                 </button>

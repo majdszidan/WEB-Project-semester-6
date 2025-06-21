@@ -77,7 +77,7 @@ export default function SignUpModal({
 
       {/* Modal Container */}
       <div
-        className="fixed inset-0 z-50 w-screen h-screen flex items-center justify-center"
+        className="fixed inset-0 m-2 z-50 h-screen flex items-center justify-center"
         onClick={(e) => {
           if ((e.target as HTMLElement).id === "signup-modal-wrapper")
             setIsOpen(false);
@@ -139,7 +139,10 @@ export default function SignUpModal({
             <form id="signup-form" className="space-y-6" onSubmit={register}>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="first-name" className="block text-sm font-medium">
+                  <label
+                    htmlFor="first-name"
+                    className="block text-sm font-medium"
+                  >
                     First name
                   </label>
                   <input
@@ -155,7 +158,10 @@ export default function SignUpModal({
                   />
                 </div>
                 <div>
-                  <label htmlFor="last-name" className="block text-sm font-medium">
+                  <label
+                    htmlFor="last-name"
+                    className="block text-sm font-medium"
+                  >
                     Last name
                   </label>
                   <input
@@ -173,7 +179,10 @@ export default function SignUpModal({
               </div>
 
               <div>
-                <label htmlFor="signup-email" className="block text-sm font-medium">
+                <label
+                  htmlFor="signup-email"
+                  className="block text-sm font-medium"
+                >
                   Email address
                 </label>
                 <input
@@ -190,7 +199,10 @@ export default function SignUpModal({
               </div>
 
               <div>
-                <label htmlFor="signup-password" className="block text-sm font-medium">
+                <label
+                  htmlFor="signup-password"
+                  className="block text-sm font-medium"
+                >
                   Password
                 </label>
                 <input
@@ -207,7 +219,10 @@ export default function SignUpModal({
               </div>
 
               <div>
-                <label htmlFor="confirm-password" className="block text-sm font-medium">
+                <label
+                  htmlFor="confirm-password"
+                  className="block text-sm font-medium"
+                >
                   Confirm password
                 </label>
                 <input
@@ -226,11 +241,8 @@ export default function SignUpModal({
               <div>
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium"
-                  style={{
-                    backgroundColor: "var(--primary-color)",
-                    color: "#fff",
-                  }}
+                  className="w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium
+                  bg-[var(--primary-color)] text-white hover:bg-[var(--primary-color-hover)] active:bg-[var(--primary-color-hover)]"
                 >
                   Sign up
                 </button>
