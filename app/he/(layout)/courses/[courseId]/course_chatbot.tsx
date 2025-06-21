@@ -118,14 +118,16 @@ export default function CourseChatbot({ course }: { course: Course }) {
   };
 
   return (
-    <div className="max-w-3xl mx-auto h-[calc(100vh-200px)] flex flex-col bg-white border rounded-lg shadow-sm">
-      <div className="flex items-center justify-between p-4 border-b bg-blue-50 ">
+    <div className="max-w-3xl mx-auto h-[calc(100vh-200px)] flex flex-col bg-[var(--background)] border border-[var(--border-color)] rounded-lg shadow-sm">
+      <div className="flex items-center justify-between p-4 rounded-t-lg border-b bg-[var(--card-background)] ">
         <div>
-          <h3 className="font-semibold text-gray-800 ">Course Assistant</h3>
+          <h3 className="font-semibold text-[var(--foreground)] ">
+            צ&apos;אטבוט לקורס
+          </h3>
           <p className="text-sm text-gray-600 max-w-2xl w-[80vw] text-nowrap truncate text-ellipsis">
-            Ask me about {course.name}
+            תוכל לשאול אותי על: {course.name}
             <br />
-            topics:{" "}
+            נוסאים:{" "}
             {Array.from(course.topics)
               .map((topic) => topic.title)
               .join(", ")}
@@ -136,9 +138,7 @@ export default function CourseChatbot({ course }: { course: Course }) {
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {loadingWelcome && (
-          <div className="text-gray-500 text-center mt-10">
-            Loading welcome message...
-          </div>
+          <div className="text-gray-500 text-center mt-10">מעדכן...</div>
         )}
 
         {messages.map((message) => (
@@ -188,7 +188,7 @@ export default function CourseChatbot({ course }: { course: Course }) {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="p-4 border-t bg-gray-50">
+      <div className="p-4 border-t rounded-b-lg bg-[var(--card-background)]">
         <div className="flex space-x-2">
           <input
             ref={inputRef}
@@ -196,14 +196,14 @@ export default function CourseChatbot({ course }: { course: Course }) {
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyDown={handleKeyPress}
-            placeholder="שאל שאלות על הקורס..."
-            className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="תשאל אותי על החומר של הקורס..."
+            className="flex-1 p-3 border text-[var(--navbar-foreground)] border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             disabled={isLoading || loadingWelcome}
           />
           <button
             onClick={handleSendMessage}
             disabled={!inputMessage.trim() || isLoading || loadingWelcome}
-            className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-3 bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <SendHorizonalIcon className="-scale-[-1]" />
           </button>
