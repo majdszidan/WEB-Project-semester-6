@@ -104,7 +104,7 @@ export default function NavBar() {
               {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
-                className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                className="p-2 rounded-md transition hover:backdrop-brightness-80"
                 title="Toggle Dark Mode"
               >
                 {isDark ? <Sun size={18} /> : <Moon size={18} />}
@@ -117,13 +117,13 @@ export default function NavBar() {
 
               {/* Auth Buttons */}
               <button
-                className="px-4 py-2 font-medium rounded-md transition lang-selector-hover text-[var(--primary-color)]"
+                className="px-4 py-2 font-medium rounded-md transition hover:backdrop-brightness-80 text-[var(--primary-color)]"
                 onClick={() => setLoginIsOpen(true)}
               >
                 Log in
               </button>
               <button
-                className="px-4 py-2 font-medium rounded-md transition lang-selector-hover text-[var(--primary-color)]"
+                className="px-4 py-2 font-medium rounded-md transition bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] text-white"
                 onClick={() => setRegisterIsOpen(true)}
               >
                 Sign up

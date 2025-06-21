@@ -13,7 +13,7 @@ export default function SiteLangPicker({ lang }: { lang: string }) {
       <button
         type="button"
         onClick={() => setLanguageIsOpen(!languageIsOpen)}
-        className="flex items-center text-sm font-bold px-3 py-2 rounded-md lang-selector-hover"
+        className="flex items-center text-sm font-bold px-3 py-2 rounded-md hover:backdrop-brightness-80"
       >
         <span>{lang}</span>
         <ChevronDown className="ms-1 text-xs" />
@@ -44,7 +44,7 @@ export default function SiteLangPicker({ lang }: { lang: string }) {
                   document.cookie = `lang=${language.code}`;
                   router.refresh();
                 }}
-                className="block px-4 py-2 text-sm lang-selector-hover"
+                className="block px-4 py-2 text-sm hover:backdrop-brightness-85"
               >
                 {language.name} ({language.code})
               </Link>

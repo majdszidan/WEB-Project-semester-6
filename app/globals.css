@@ -22,6 +22,7 @@
   --card-foreground: #111111;
   --border-color: #d1d5db;
   --primary-color: #1a65c0;
+  --primary-color-hover: #1e569a;
   --secondary-background: #f9fafb;
 
   --answer-bg-default: #ffffff;
@@ -52,8 +53,8 @@
   --card-foreground: #ededed;
   --border-color: #374151;
   --primary-color: #1d6bca;
+  --primary-color-hover: #3386ec;
   --secondary-background: #111827;
-
   --answer-bg-default: #374151;
   --answer-bg-correct: #0e803a;
   --answer-bg-wrong: #d41111;
