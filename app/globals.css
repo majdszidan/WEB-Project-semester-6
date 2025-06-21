@@ -16,7 +16,7 @@
   --navbar-foreground: #171717;
 
   --danger-color: #da0909;
-  --hover-danger-bg: #7f1d1d;
+  --hover-danger-bg: #4e1d1d;
 
   --card-background: #f9fafb;
   --card-foreground: #111111;
@@ -26,8 +26,9 @@
   --secondary-background: #f9fafb;
 
   --answer-bg-default: #ffffff;
-  --answer-bg-correct: #0e803a;
-  --answer-bg-wrong: #d41111;
+  --answer-bg-correct: #288a4d;
+  --answer-bg-wrong: #b33f3f;
+  --hover-danger-bg: #4e1d1d;
   --answer-text-correct: #b7c9c4;
   --answer-text-wrong: #fecaca;
 
@@ -47,7 +48,7 @@
   --navbar-foreground: #ffffff;
 
   --danger-color: #da0909;
-  --hover-danger-bg: #7f1d1d;
+  --hover-danger-bg: #4e1d1d;
 
   --card-background: #1f2937;
   --card-foreground: #ededed;
@@ -56,8 +57,8 @@
   --primary-color-hover: #3386ec;
   --secondary-background: #111827;
   --answer-bg-default: #374151;
-  --answer-bg-correct: #0e803a;
-  --answer-bg-wrong: #d41111;
+  --answer-bg-correct: #297847;
+  --answer-bg-wrong: #803838;
   --answer-text-correct: #bbf7d0;
   --answer-text-wrong: #fecaca;
 
