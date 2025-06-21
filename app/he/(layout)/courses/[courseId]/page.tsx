@@ -234,10 +234,7 @@ export default function CoursePage() {
                       activeTab === tab
                         ? "var(--secondary-background)"
                         : "transparent",
-                    color:
-                      activeTab === tab
-                        ? "var(--primary-color)"
-                        : "var(--card-foreground)",
+                    color: activeTab === tab ? "var(--primary-color)" : "white",
                   }}
                 >
                   {tab === "quiz" ? "בוחן" : "צ'אט-בוט"}
