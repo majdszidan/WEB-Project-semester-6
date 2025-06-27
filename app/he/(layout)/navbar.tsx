@@ -88,42 +88,44 @@ export default function NavBar() {
 
             <div
               hidden={!isPhoneMenuOpen}
-              className="fixed flex justify-center flex-col items-center w-screen top-16 start-0 z-50 shadow-inner"
+              className="z-40 fixed top-16 start-0 w-screen h-screen bg-black opacity-50"
+              onClick={() => setIsPhoneMenuOpen(false)}
+            ></div>
+            <div
+              hidden={!isPhoneMenuOpen}
+              className="fixed flex gap-5 justify-end flex-col pt-5 pb-18 items-center w-3/4 top-16 h-full end-0 z-50 shadow-inner"
               style={{
                 backgroundColor: "var(--card-background)",
                 color: "var(--foreground)",
               }}
             >
-              <div className="flex flex-col mt-2 items-center space-y-2">
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm font-bold text-[var(--foreground)]">
-                    {username.split("@")[0]}
-                  </span>
-                  <User className="w-5 h-5 text-[var(--primary-color)]" />
-                </div>
-
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center px-3 py-2 text-sm font-medium rounded-md transition"
-                  style={{
-                    color: "var(--danger-color)",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor =
-                      "var(--hover-danger-bg)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = "transparent")
-                  }
-                >
-                  <LogOut className="w-4 h-4 me-1" />
-                  יציאה
-                </button>
-              </div>
-
               <div className="relative" id="language-dropdown-container">
                 <SiteLangPicker lang="Hebrew" />
               </div>
+              <hr className="w-3/4" />
+              <div className="flex items-center space-x-2">
+                <span className="text-sm font-bold text-[var(--foreground)]">
+                  {username.split("@")[0]}
+                </span>
+                <User className="w-5 h-5 text-[var(--primary-color)]" />
+              </div>
+              <button
+                onClick={handleLogout}
+                className="flex items-center px-3 py-2 text-sm font-medium rounded-md transition"
+                style={{
+                  color: "var(--danger-color)",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor =
+                    "var(--hover-danger-bg)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "transparent")
+                }
+              >
+                <LogOut className="w-4 h-4 me-1" />
+                התנתק
+              </button>
             </div>
           </div>
 

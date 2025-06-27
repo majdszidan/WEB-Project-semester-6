@@ -66,18 +66,18 @@ export default function AddCourseButton() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 p-2 rounded-full shadow-lg transition-transform transform hover:scale-105 z-50"
+          className="fixed bottom-6 right-6 p-2 rounded-full shadow-lg transition-transform transform hover:scale-105 z-10"
           style={{
-            backgroundColor: 'var(--primary-color)',
-            color: 'var(--title-color)',
+            backgroundColor: "var(--primary-color)",
+            color: "var(--title-color)",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--primary-color)';
-            e.currentTarget.style.filter = 'brightness(0.9)';
+            e.currentTarget.style.backgroundColor = "var(--primary-color)";
+            e.currentTarget.style.filter = "brightness(0.9)";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--primary-color)';
-            e.currentTarget.style.filter = 'brightness(1)';
+            e.currentTarget.style.backgroundColor = "var(--primary-color)";
+            e.currentTarget.style.filter = "brightness(1)";
           }}
         >
           <PlusIcon className="w-7 h-7" />
@@ -88,32 +88,32 @@ export default function AddCourseButton() {
         <>
           <div className="fixed inset-0 z-40 w-screen h-screen bg-black opacity-50"></div>
           <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div 
+            <div
               className="rounded-2xl shadow-xl w-full max-w-md p-6 relative"
               style={{
-                backgroundColor: 'var(--card-background)',
-                color: 'var(--card-foreground)',
+                backgroundColor: "var(--card-background)",
+                color: "var(--card-foreground)",
               }}
             >
               <button
                 onClick={() => setIsOpen(false)}
                 className="absolute top-4 right-4 hover:opacity-70"
-                style={{ color: 'var(--card-foreground)' }}
+                style={{ color: "var(--card-foreground)" }}
               >
                 <X className="w-5 h-5" />
               </button>
 
-              <h2 
+              <h2
                 className="text-2xl font-bold text-center mb-6"
-                style={{ color: 'var(--card-foreground)' }}
+                style={{ color: "var(--card-foreground)" }}
               >
                 إضافة دورة جديدة
               </h2>
 
               {error && (
-                <div 
+                <div
                   className="mb-4 text-center font-medium"
-                  style={{ color: 'var(--danger-color)' }}
+                  style={{ color: "var(--danger-color)" }}
                 >
                   {error}
                 </div>
@@ -121,9 +121,9 @@ export default function AddCourseButton() {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label 
+                  <label
                     className="block text-sm font-medium text-right"
-                    style={{ color: 'var(--card-foreground)' }}
+                    style={{ color: "var(--card-foreground)" }}
                   >
                     اسم الدورة
                   </label>
@@ -134,8 +134,8 @@ export default function AddCourseButton() {
                     onChange={(e) => setCourseName(e.target.value)}
                     className="mt-1 block w-full rounded-md shadow-sm px-3 py-2 focus:ring-2 focus:outline-none text-right"
                     style={{
-                      backgroundColor: 'var(--answer-bg-default)',
-                      color: 'var(--foreground)',
+                      backgroundColor: "var(--answer-bg-default)",
+                      color: "var(--foreground)",
                       border: `1px solid var(--border-color)`,
                     }}
                     required
@@ -144,9 +144,9 @@ export default function AddCourseButton() {
                 </div>
 
                 <div>
-                  <label 
+                  <label
                     className="block text-sm font-medium text-right"
-                    style={{ color: 'var(--card-foreground)' }}
+                    style={{ color: "var(--card-foreground)" }}
                   >
                     اللغة
                   </label>
@@ -155,8 +155,8 @@ export default function AddCourseButton() {
                     onChange={(e) => setLanguage(e.target.value)}
                     className="mt-1 block w-full rounded-md shadow-sm px-3 py-2 focus:ring-2 focus:outline-none text-right"
                     style={{
-                      backgroundColor: 'var(--answer-bg-default)',
-                      color: 'var(--foreground)',
+                      backgroundColor: "var(--answer-bg-default)",
+                      color: "var(--foreground)",
                       border: `1px solid var(--border-color)`,
                     }}
                     required
@@ -173,9 +173,9 @@ export default function AddCourseButton() {
                 </div>
 
                 <div>
-                  <label 
+                  <label
                     className="block text-sm font-medium text-right"
-                    style={{ color: 'var(--card-foreground)' }}
+                    style={{ color: "var(--card-foreground)" }}
                   >
                     الوصف
                   </label>
@@ -184,8 +184,8 @@ export default function AddCourseButton() {
                     onChange={(e) => setDescription(e.target.value)}
                     className="mt-1 block w-full rounded-md shadow-sm px-3 py-2 focus:ring-2 focus:outline-none text-right"
                     style={{
-                      backgroundColor: 'var(--answer-bg-default)',
-                      color: 'var(--foreground)',
+                      backgroundColor: "var(--answer-bg-default)",
+                      color: "var(--foreground)",
                       border: `1px solid var(--border-color)`,
                     }}
                     rows={4}
@@ -201,18 +201,20 @@ export default function AddCourseButton() {
                     disabled={loading}
                     className="w-full py-2 px-4 rounded-md shadow transition"
                     style={{
-                      backgroundColor: loading ? 'var(--border-color)' : 'var(--primary-color)',
-                      color: 'var(--title-color)',
+                      backgroundColor: loading
+                        ? "var(--border-color)"
+                        : "var(--primary-color)",
+                      color: "var(--title-color)",
                       opacity: loading ? 0.6 : 1,
                     }}
                     onMouseEnter={(e) => {
                       if (!loading) {
-                        e.currentTarget.style.filter = 'brightness(0.9)';
+                        e.currentTarget.style.filter = "brightness(0.9)";
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (!loading) {
-                        e.currentTarget.style.filter = 'brightness(1)';
+                        e.currentTarget.style.filter = "brightness(1)";
                       }
                     }}
                   >
@@ -230,16 +232,16 @@ export default function AddCourseButton() {
         <>
           <div className="fixed inset-0 z-40 w-screen h-screen bg-black opacity-50"></div>
           <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div 
+            <div
               className="rounded-2xl shadow-xl w-full max-w-md p-6 relative"
               style={{
-                backgroundColor: 'var(--card-background)',
-                color: 'var(--card-foreground)',
+                backgroundColor: "var(--card-background)",
+                color: "var(--card-foreground)",
               }}
             >
-              <h3 
+              <h3
                 className="text-2xl font-semibold mb-4 text-center"
-                style={{ color: 'var(--card-foreground)' }}
+                style={{ color: "var(--card-foreground)" }}
               >
                 اختر مواضيع المنهج
               </h3>
@@ -260,20 +262,20 @@ export default function AddCourseButton() {
                       }}
                       className="mt-1 ml-2"
                       style={{
-                        accentColor: 'var(--primary-color)',
+                        accentColor: "var(--primary-color)",
                       }}
                     />
                     <div>
-                      <p 
+                      <p
                         className="font-medium"
-                        style={{ color: 'var(--card-foreground)' }}
+                        style={{ color: "var(--card-foreground)" }}
                       >
                         {item.title}
                       </p>
-                      <p 
+                      <p
                         className="text-sm"
-                        style={{ 
-                          color: 'var(--card-foreground)',
+                        style={{
+                          color: "var(--card-foreground)",
                           opacity: 0.7,
                         }}
                       >
@@ -289,15 +291,17 @@ export default function AddCourseButton() {
                   onClick={() => setShowSyllabusModal(false)}
                   className="px-4 py-2 rounded transition"
                   style={{
-                    backgroundColor: 'var(--secondary-background)',
-                    color: 'var(--foreground)',
+                    backgroundColor: "var(--secondary-background)",
+                    color: "var(--foreground)",
                     border: `1px solid var(--border-color)`,
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--border-color)';
+                    e.currentTarget.style.backgroundColor =
+                      "var(--border-color)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--secondary-background)';
+                    e.currentTarget.style.backgroundColor =
+                      "var(--secondary-background)";
                   }}
                 >
                   رجوع
@@ -323,14 +327,14 @@ export default function AddCourseButton() {
                   }}
                   className="px-4 py-2 rounded transition"
                   style={{
-                    backgroundColor: 'var(--answer-bg-correct)',
-                    color: 'var(--title-color)',
+                    backgroundColor: "var(--answer-bg-correct)",
+                    color: "var(--title-color)",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.filter = 'brightness(0.9)';
+                    e.currentTarget.style.filter = "brightness(0.9)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.filter = 'brightness(1)';
+                    e.currentTarget.style.filter = "brightness(1)";
                   }}
                 >
                   إنشاء الدورة
