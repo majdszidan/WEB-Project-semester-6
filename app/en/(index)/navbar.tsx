@@ -71,15 +71,24 @@ export default function NavBar() {
 
               <div
                 hidden={!isPhoneMenuOpen}
-                className="fixed flex justify-center flex-col items-center w-screen top-16 start-0 z-50 shadow-inner"
+                className="z-40 fixed top-16 start-0 w-screen h-screen bg-black opacity-50"
+                onClick={() => setIsPhoneMenuOpen(false)}
+              ></div>
+              <div
+                hidden={!isPhoneMenuOpen}
+                className="fixed flex justify-end pb-18 flex-col items-center h-full top-16 end-0 z-50 shadow-inner w-3/4"
                 style={{
                   backgroundColor: "var(--card-background)",
                   color: "var(--foreground)",
                 }}
               >
+                <div className="relative mb-5" id="language-dropdown-container">
+                  <SiteLangPicker lang="English" />
+                </div>
+                <hr className="w-3/4" />
                 <button
                   id="login-btn"
-                  className="px-4 py-2 font-medium rounded-md transition hover:bg-[var(--background)] text-[var(--primary-color)]"
+                  className="px-4 mt-5 py-2 font-medium rounded-md transition hover:bg-[var(--background)] text-[var(--primary-color)]"
                   onClick={() => setLoginIsOpen(true)}
                 >
                   Log in
@@ -92,10 +101,6 @@ export default function NavBar() {
                 >
                   Sign up
                 </button>
-
-                <div className="relative" id="language-dropdown-container">
-                  <SiteLangPicker lang="English" />
-                </div>
               </div>
             </div>
 

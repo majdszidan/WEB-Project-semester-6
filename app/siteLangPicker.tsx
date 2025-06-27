@@ -44,7 +44,7 @@ export default function SiteLangPicker({ lang }: { lang: string }) {
                   document.cookie = `lang=${language.code}`;
                   router.refresh();
                 }}
-                className="block px-4 py-2 text-sm hover:backdrop-brightness-85"
+                className="block px-4 w-full text-center py-2 text-sm hover:backdrop-brightness-85"
               >
                 {language.name} ({language.code})
               </Link>
